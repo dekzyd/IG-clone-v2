@@ -8,8 +8,10 @@ import ChatIcon from "@mui/icons-material/Chat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Avatar } from "@mui/material";
 
 const Sidenav = () => {
+  const username = "brightphilips";
   return (
     <div className="sidenav">
       <img
@@ -46,7 +48,16 @@ const Sidenav = () => {
           <AddCircleOutlineIcon />
           <span>Create</span>
         </button>
+
+        <button className="sidenav__button">
+          <div className="av_user">
+            <Avatar>{username ? username.charAt(0).toUpperCase() : "A"}</Avatar>
+            <span>{username}</span>
+          </div>
+          <button className="logout__button">Logout</button>
+        </button>
       </div>
+
       <div className="sidenav__more">
         <button className="sidenav__button">
           <MenuIcon />

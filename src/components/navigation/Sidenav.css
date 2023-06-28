@@ -8,6 +8,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   z-index: 1;
+  width: 300px;
 }
 
 .sidenav__logo {
@@ -20,7 +21,8 @@ body {
   flex-direction: column;
 }
 
-.sidenav__button {
+.sidenav__button,
+.av_user {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -37,7 +39,8 @@ body {
   background-color: var(--hover-color);
 }
 
-.sidenav__button > span {
+.sidenav__button > span,
+.av_user > span {
   font-size: 18px;
   font-weight: bold;
   margin-left: 10px;
@@ -46,4 +49,30 @@ body {
 .sidenav__more {
   position: fixed;
   bottom: 3px;
+}
+
+.logout__button {
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 10px;
+  border: transparent;
+  margin-left: 10px;
+}
+
+.logout__button:hover {
+  cursor: pointer;
+  color: #0095f6;
+}
+
+.sidenav__button > .user_info {
+  /* display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between; */
+}
+
+.av_user {
+  padding: 0px;
+  margin: 0px;
 }
