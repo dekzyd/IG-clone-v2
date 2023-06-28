@@ -1,0 +1,49 @@
+body {
+  --hover-color: #ddd7d7;
+}
+
+.sidenav {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.sidenav__logo {
+  width: 120px;
+  margin: 25px;
+}
+
+.sidenav__buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidenav__button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 15px;
+  margin: 5px 10px;
+  background: transparent;
+  border: transparent;
+  width: 100%;
+  border-radius: 15px;
+}
+
+.sidenav__button:hover {
+  cursor: pointer;
+  background-color: var(--hover-color);
+}
+
+.sidenav__button > span {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.sidenav__more {
+  position: fixed;
+  bottom: 3px;
+}
