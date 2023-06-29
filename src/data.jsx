@@ -36,4 +36,56 @@ export const comments = [
   },
 ];
 
+export const photos = [
+  {
+    docId: "holla",
+    imageSrc: "/images/image1.jpg",
+    caption: "random caption",
+    likes: ["john", "bonny", "oliver", "godwin"],
+    comments: ["good", "great", "awesome", "beautiful", "obsessesive"],
+  },
+  {
+    docId: "holla",
+    imageSrc: "/images/image1.jpg",
+    caption: "random caption",
+    likes: ["john", "bonny", "oliver", "godwin"],
+    comments: ["good", "great", "awesome", "beautiful", "obsessesive"],
+  },
+  {
+    docId: "bellyup",
+    imageSrc: "/images/image4.jpg",
+    caption: "random caption",
+    likes: ["john", "bonny", "godwin"],
+    comments: ["good", "great", "awesome", "beautiful", "obsessesive"],
+  },
+  {
+    docId: "cuella",
+    imageSrc: "/images/image1.jpg",
+    caption: "random caption",
+    likes: ["john", "bonny", "oliver", "godwin"],
+    comments: ["good", "great", "obsessesive"],
+  },
+  {
+    docId: "dollarr",
+    imageSrc: "/images/image3.jpg",
+    caption: "random caption",
+    likes: ["oliver", "godwin"],
+    comments: ["good", "great", "obsessesive"],
+  },
+  {
+    docId: "eola",
+    imageSrc: "/images/image2.jpg",
+    caption: "random caption",
+    likes: ["john", "bonny", "oliver", "godwin"],
+    comments: ["good", "great", "beautiful", "obsessesive"],
+  },
+  {
+    docId: "flora",
+    imageSrc: "/images/image4.jpg",
+    caption: "random caption",
+    likes: ["john", "godwin"],
+    comments: ["beautiful", "obsessesive"],
+  },
+];
+
 export default data;
