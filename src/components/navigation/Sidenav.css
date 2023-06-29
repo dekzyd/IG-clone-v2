@@ -8,7 +8,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   z-index: 1;
-  width: 300px;
+  width: 270px;
 }
 
 .sidenav__logo {
@@ -65,14 +65,13 @@ body {
   color: #0095f6;
 }
 
-.sidenav__button > .user_info {
-  /* display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between; */
-}
-
 .av_user {
   padding: 0px;
   margin: 0px;
+  font-size: 16px;
+}
+
+.av_user:hover {
+  cursor: pointer;
+  background-color: var(--hover-color);
 }

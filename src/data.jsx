@@ -20,4 +20,20 @@ const data = [
   },
 ];
 
+export const comments = [
+  {
+    userId: "_burna_a",
+    message:
+      "lorem ipsum for life is not a bad thing na just fake news commot for here, wetin u dey try talk like",
+  },
+  {
+    userId: "delhi_united",
+    message: "great work...",
+  },
+  {
+    userId: "abuja_mhan",
+    message: "commot for here, wetin u dey try talk like so..",
+  },
+];
+
 export default data;

@@ -1,0 +1,20 @@
+.single__comment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.commentor {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.like__comment {
+  margin-right: 5px;
+}
+
+.comment__item {
+  margin: 5px 0px;
+}
