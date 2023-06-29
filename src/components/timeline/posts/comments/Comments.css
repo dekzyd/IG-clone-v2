@@ -1,0 +1,41 @@
+.post__comments {
+  margin-left: 7px;
+}
+
+.show_all {
+  border: transparent;
+  background: transparent;
+  margin-left: -6px;
+  color: gray;
+  margin-bottom: 8px;
+}
+
+.show_all:hover {
+  cursor: pointer;
+  color: #0095f6;
+}
+
+.add__comment {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  border: 0.5px solid grey;
+  border-radius: 2px;
+}
+.submit__comment {
+  font-size: 15px;
+  font-weight: bold;
+  padding: 15px 10px;
+  border: transparent;
+  background: transparent;
+  color: gray;
+}
+
+.submit__comment:hover {
+  color: #0095f6;
+}
+
+.submit__input {
+  border: transparent;
+  background: transparent;
+  padding-left: 15px;
+}

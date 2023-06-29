@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -5,6 +6,7 @@ import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { Avatar } from "@mui/material";
 import "./Post.css";
+import Comments from "./comments/Comments";
 
 // add comment section
 
@@ -33,8 +35,9 @@ const Post = ({ post }) => {
             <BookmarkBorderIcon className="postIcon" />
           </div>
         </div>
-        Liked by {likes} people.
+        <p className="likes">{likes} likes</p>
       </div>
+      <Comments />
     </div>
   );
 };
