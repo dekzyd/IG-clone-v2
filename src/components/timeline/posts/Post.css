@@ -54,5 +54,7 @@
 .likes {
   margin-left: 7px;
   font-weight: bold;
-  margin: 2px 0px -2px 7px;
+  margin: 2px 0px 0px 7px;
+  font-size: 15px;
+  color: gray;
 }
