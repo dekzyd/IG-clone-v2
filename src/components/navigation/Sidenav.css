@@ -40,7 +40,7 @@ body {
 }
 
 .sidenav__button > span,
-.av_user > span {
+.av_user > .link {
   font-size: 18px;
   font-weight: bold;
   margin-left: 10px;
@@ -74,4 +74,8 @@ body {
 .av_user:hover {
   cursor: pointer;
   background-color: var(--hover-color);
+}
+
+.link:hover {
+  color: #0095f6;
 }

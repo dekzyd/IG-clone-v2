@@ -1,4 +1,5 @@
 import "./Sidenav.css";
+import { Link } from "react-router-dom";
 
 import HomeIcon from "@mui/icons-material/Home";
 import SearchIcon from "@mui/icons-material/Search";
@@ -51,8 +52,12 @@ const Sidenav = () => {
 
         <button className="sidenav__button">
           <div className="av_user">
-            <Avatar>{username ? username.charAt(0).toUpperCase() : "A"}</Avatar>
-            <span>{username}</span>
+            <Avatar src="\images\image1.jpg">
+              {username ? username.charAt(0).toUpperCase() : "A"}
+            </Avatar>
+            <Link to={`/profile/${username}`} className="link">
+              <span>{username}</span>
+            </Link>
           </div>
           <button className="logout__button">Logout</button>
         </button>

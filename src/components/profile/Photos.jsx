@@ -4,8 +4,8 @@ import { photos } from "../../data";
 
 const Photos = () => {
   return (
-    <div className="h-16 border-t border-gray-primary mt-12 pt-4 px-10">
-      <div className="grid grid-cols-3 gap-8 mt-4 mb-12">
+    <div className="h-16 border-t border-gray-primary mt-12 pt-4 px-10 ">
+      <div className="grid grid-cols-3 gap-8 mt-4 mb-12 pb-8">
         {!photos
           ? new Array(12)
               .fill(0)
@@ -13,7 +13,11 @@ const Photos = () => {
           : photos.length > 0
           ? photos.map((photo) => (
               <div key={photo.docId} className="relative group">
-                <img src={photo.imageSrc} alt={photo.caption} />
+                <img
+                  src={photo.imageSrc}
+                  alt={photo.caption}
+                  className="h-60 w-full object-cover"
+                />
 
                 <div className="absolute bottom-0 left-0 bg-gray-200 z-10 w-full justify-evenly items-center h-full bg-black-faded group-hover:flex hidden">
                   <p className="flex items-center text-white font-bold">
