@@ -1,10 +1,10 @@
 import Header from "../components/profile/Header";
 import Photos from "../components/profile/Photos";
 
-const profilePage = () => {
+const profilePage = ({ user }) => {
   return (
     <div>
-      <Header />
+      <Header user={user} />
       <Photos />
     </div>
   );

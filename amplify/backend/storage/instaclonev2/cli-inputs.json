@@ -1,0 +1,14 @@
+{
+  "resourceName": "instaclonev2",
+  "policyUUID": "b87564e6",
+  "bucketName": "instaclonev2d8dbdf91b91a4b4da8ed690207abaf62",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
