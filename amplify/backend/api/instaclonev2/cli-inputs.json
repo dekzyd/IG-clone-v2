@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "instaclonev2",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 356,
+      "apiKeyExpirationDate": "2024-06-28T13:51:34.614Z",
+      "keyDescription": "instaclonev2"
+    }
+  }
+}

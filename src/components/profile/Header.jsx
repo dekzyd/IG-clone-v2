@@ -1,9 +1,15 @@
-const Header = () => {
+/* eslint-disable react/prop-types */
+import { Auth } from "aws-amplify";
+
+const Header = ({ user }) => {
   const profileUsername = "habibi";
   const photosCount = 25;
   const followerCount = 153;
   const following_length = 2546;
   const fullName = "Abudulaye habibi";
+
+  console.log(fullName);
+
   return (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto  mt-6 max-w-screen-lg">
       <div className="container flex justify-center items-center">

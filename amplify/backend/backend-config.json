@@ -1,4 +1,24 @@
 {
+  "api": {
+    "instaclonev2": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2024-06-28T13:51:34.614Z",
+              "apiKeyExpirationDays": 356,
+              "description": "instaclonev2"
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
   "auth": {
     "instaclonev2a8dd61bb": {
       "customAuth": false,
