@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import "./Sidenav.css";
 import { Link } from "react-router-dom";
 
@@ -11,8 +12,9 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
 
-const Sidenav = () => {
-  const username = "brightphilips";
+const Sidenav = ({ signOut, user }) => {
+  const username = user?.username;
+
   return (
     <div className="sidenav">
       <img
@@ -59,7 +61,9 @@ const Sidenav = () => {
               <span>{username}</span>
             </Link>
           </div>
-          <button className="logout__button">Logout</button>
+          <button className="logout__button" onClick={signOut}>
+            Logout
+          </button>
         </button>
       </div>
 
