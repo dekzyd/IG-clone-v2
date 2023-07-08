@@ -11,8 +11,8 @@ const Photos = () => {
               .fill(0)
               .map((_, i) => <Skeleton key={i} width={320} height={400} />)
           : photos.length > 0
-          ? photos.map((photo) => (
-              <div key={photo.docId} className="relative group">
+          ? photos.map((photo, index) => (
+              <div key={`${photo.docId}${index}`} className="relative group">
                 <img
                   src={photo.imageSrc}
                   alt={photo.caption}

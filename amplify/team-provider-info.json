@@ -17,6 +17,9 @@
       },
       "api": {
         "instaclonev2": {}
+      },
+      "storage": {
+        "instaclonev2": {}
       }
     }
   }

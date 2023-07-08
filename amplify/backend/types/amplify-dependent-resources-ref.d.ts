@@ -16,5 +16,11 @@ export type AmplifyDependentResourcesAttributes = {
       "UserPoolId": "string",
       "UserPoolName": "string"
     }
+  },
+  "storage": {
+    "instaclonev2": {
+      "BucketName": "string",
+      "Region": "string"
+    }
   }
 }

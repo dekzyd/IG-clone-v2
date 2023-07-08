@@ -8,7 +8,7 @@ const Header = ({ user }) => {
   const following_length = 2546;
   const fullName = "Abudulaye habibi";
 
-  console.log(fullName);
+  console.log(user);
 
   return (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto  mt-6 max-w-screen-lg">
