@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-instaclonev2-staging-91744-authRole",
+      "UnauthRoleArn": "arn:aws:iam::436094817425:role/amplify-instaclonev2-staging-91744-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::436094817425:role/amplify-instaclonev2-staging-91744-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-instaclonev2-staging-91744-deployment",
+      "UnauthRoleName": "amplify-instaclonev2-staging-91744-unauthRole",
+      "StackName": "amplify-instaclonev2-staging-91744",
+      "StackId": "arn:aws:cloudformation:eu-north-1:436094817425:stack/amplify-instaclonev2-staging-91744/4c95ea60-1d70-11ee-a50f-0a8823601bc2",
+      "AmplifyAppId": "d346ntc6xgzu5f"
+    },
+    "categories": {
+      "auth": {
+        "instaclonev2a8dd61bb": {}
+      }
+    }
+  }
+}
