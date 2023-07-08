@@ -3,7 +3,6 @@ import "./SingleComment.css";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const SingleComment = ({ comment }) => {
-  console.log(comment);
   const { userId, message } = comment;
   return (
     <div className="single__comment">
