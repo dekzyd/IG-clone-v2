@@ -2,6 +2,7 @@ import "./App.css";
 import HomeLayout from "./pages/HomeLayout";
 import Homepage from "./pages/Homepage";
 import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "@aws-amplify/ui-react/styles.css";
@@ -21,6 +22,10 @@ function App({ signOut, user }) {
         {
           path: "profile/:username",
           element: <ProfilePage user={user} />,
+        },
+        {
+          path: "settings",
+          element: <SettingsPage user={user} />,
         },
       ],
     },

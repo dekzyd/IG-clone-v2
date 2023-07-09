@@ -61,9 +61,9 @@ const Sidenav = ({ signOut, user }) => {
               <span>{username}</span>
             </Link>
           </div>
-          <button className="logout__button" onClick={signOut}>
+          <div className="logout__button" onClick={signOut}>
             Logout
-          </button>
+          </div>
         </button>
       </div>
 
