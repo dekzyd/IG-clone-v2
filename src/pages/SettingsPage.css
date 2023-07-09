@@ -1,0 +1,10 @@
+.container__box {
+  width: 60vw;
+  margin: 0 auto;
+  padding: 4rem 0;
+}
+
+.form {
+  /* display: flex;
+  justify-content: center; */
+}

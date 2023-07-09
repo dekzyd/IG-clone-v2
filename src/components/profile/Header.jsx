@@ -1,5 +1,9 @@
 /* eslint-disable react/prop-types */
-import { Auth } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
+import { listUsers } from "../../graphql/queries";
+import { createUser } from "../../graphql/mutations";
+
+import { useEffect } from "react";
 
 const Header = ({ user }) => {
   const profileUsername = "habibi";
@@ -8,7 +12,33 @@ const Header = ({ user }) => {
   const following_length = 2546;
   const fullName = "Abudulaye habibi";
 
-  console.log(user);
+  const userDetails = {
+    name: "watamii",
+    username: "indigolayo",
+    gender: "female",
+    phone: "7864563",
+  };
+
+  const newUser = async () => {
+    try {
+      await API.graphql(graphqlOperation(createUser, { input: userDetails }));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getUsers = async () => {
+    try {
+      const usersList = await API.graphql(graphqlOperation(listUsers));
+      console.log(usersList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <div className="grid grid-cols-3 gap-4 justify-between mx-auto  mt-6 max-w-screen-lg">
@@ -22,6 +52,7 @@ const Header = ({ user }) => {
       <div className="flex items-center justify-center flex-col col-span-2">
         <div className="container flex items-center">
           <p className="text-2xl mr-4">{profileUsername}</p>
+          <button onClick={newUser}> create user</button>
 
           <button
             className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"
