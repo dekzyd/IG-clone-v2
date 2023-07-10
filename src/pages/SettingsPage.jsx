@@ -10,7 +10,7 @@ import { createUser, updateUser } from "../graphql/mutations";
 import { toast } from "react-toastify";
 
 const SettingsPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [user, setUser] = useState({
     name: "",
     uniqueId: "",

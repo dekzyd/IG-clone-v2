@@ -1,21 +1,68 @@
 import "./CreatePost.css";
+import { API, Auth, Storage, graphqlOperation } from "aws-amplify";
+import { createPost } from "../graphql/mutations";
+import { listUsers } from "../graphql/queries";
 
 import { toast } from "react-toastify";
 
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { CollectionsRounded } from "@mui/icons-material";
 
 const CreatePost = () => {
   const [post, setPost] = useState({ title: "", description: "", image: "" });
   const [photo, setPhoto] = useState("");
+  const [updateProfile, setUpdateProfile] = useState(false);
 
-  const formSubmit = (e) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userDetails = await Auth.currentAuthenticatedUser();
+      const usersList = await API.graphql(graphqlOperation(listUsers));
+      const currentUser = usersList.data.listUsers.items.filter(
+        (item) => item.uniqueId === userDetails.attributes.sub
+      );
+
+      if (currentUser.length < 1) {
+        setUpdateProfile(true);
+        toast.warning("You need to update your Profile to continue");
+      } else {
+        setPost({ ...post, userPostsId: currentUser[0].id });
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const formSubmit = async (e) => {
     e.preventDefault();
     if (!(post.title || post.description || post.image)) {
       toast.info("Fill in some input");
       return;
+    }
+    try {
+      await API.graphql(
+        graphqlOperation(createPost, {
+          input: {
+            title: post.title,
+            description: post.description,
+            image: post.image,
+            userPostsId: post.userPostsId,
+          },
+        })
+      );
+
+      toast.success("Added Post");
+      setPost({
+        title: "",
+        description: "",
+        image: "",
+      });
+      navigate("/");
+    } catch (error) {
+      toast.error("There was an error");
+      console.log(error);
     }
     console.log(post);
   };
@@ -34,19 +81,19 @@ const CreatePost = () => {
     const image = e.target.files[0];
 
     try {
-      //   upload user image avatar to s3 bucket
+      //   upload post image to s3 bucket
       const id = toast.loading("Uploading...Pls wait");
-      // const file_ext = image.name.split(".")[1];
-      // const { key } = await Storage.put(`${Date.now()}.${file_ext}`, image, {
-      //   contentType: `image/${file_ext}`,
-      // });
+      const file_ext = image.name.split(".")[1];
+      const { key } = await Storage.put(`${Date.now()}.${file_ext}`, image, {
+        contentType: `image/${file_ext}`,
+      });
       toast.update(id, {
         render: "Uploaded successfully",
         type: "success",
         isLoading: false,
         autoClose: 2000,
       });
-      // setPost({ ...post, image: key });
+      setPost({ ...post, image: key });
       setPhoto(URL.createObjectURL(image));
     } catch (error) {
       toast.error("uploading failed");
@@ -165,6 +212,7 @@ const CreatePost = () => {
             </div>
           </div>
         </form>
+        {updateProfile && navigate("/settings")}
       </div>
     </section>
   );

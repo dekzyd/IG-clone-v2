@@ -5,7 +5,7 @@ import "./Timeline.css";
 import Post from "./posts/Post";
 import { API, Auth, graphqlOperation } from "aws-amplify";
 import { listUsers } from "../../graphql/queries";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { listPosts } from "../../graphql/queries";
 
