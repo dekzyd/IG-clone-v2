@@ -24,7 +24,7 @@ function App({ signOut, user }) {
           element: <Homepage signOut={signOut} user={user} />,
         },
         {
-          path: "profile/:username",
+          path: "profile/:id",
           element: <ProfilePage user={user} />,
         },
         {

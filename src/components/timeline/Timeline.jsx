@@ -12,7 +12,7 @@ import { listPosts } from "../../graphql/queries";
 const Timeline = () => {
   const [updateProfile, setUpdateProfile] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [user, setUser] = useState({});
+  const [userSP, setUserSP] = useState({});
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -33,7 +33,7 @@ const Timeline = () => {
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
 
-          setUser(sortedPosts);
+          setUserSP(sortedPosts);
         }
       } catch (error) {
         console.log(error);
@@ -47,7 +47,7 @@ const Timeline = () => {
       <div className="timeline__left">
         <div className="timeline_posts">
           {posts.map((post, index) => (
-            <Post key={index} data={post} user={user} />
+            <Post key={index} postData={post} userSP={userSP} />
           ))}
         </div>
       </div>
