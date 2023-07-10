@@ -7,11 +7,10 @@ import { API, Auth, Storage, graphqlOperation } from "aws-amplify";
 import { listUsers } from "../graphql/queries";
 import { createUser, updateUser } from "../graphql/mutations";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const SettingsPage = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [user, setUser] = useState({
     name: "",
     uniqueId: "",
@@ -36,8 +35,6 @@ const SettingsPage = () => {
         (item) => item.uniqueId === userDetails.attributes.sub
       );
 
-      console.log(currentUser);
-
       if (currentUser.length < 1) {
         setFreshUser(true);
         toast.warning("You need to update your Profile");
@@ -54,11 +51,9 @@ const SettingsPage = () => {
     fetchUser();
   }, []);
 
-  console.log(user);
-
   const updateAvatar = async (e) => {
     const image = e.target.files[0];
-    console.log(URL.createObjectURL(image));
+
     try {
       //   upload user image avatar to s3 bucket
       const file_ext = image.name.split(".")[1];
@@ -136,12 +131,11 @@ const SettingsPage = () => {
       phone: "",
       gender: "",
     });
+    toast.success("Form cleared.");
   };
 
   return (
     <section>
-      <ToastContainer></ToastContainer>
-
       <div className="container__box">
         <button className="bg-indigo-600 px-2 py-1 mb-3 rounded-md text-white">
           <Link to="/">Back Home</Link>

@@ -48,8 +48,10 @@ const Sidenav = ({ signOut, user }) => {
           <span>Notifications</span>
         </button>
         <button className="sidenav__button">
-          <AddCircleOutlineIcon />
-          <span>Create</span>
+          <Link to="/add_post">
+            <AddCircleOutlineIcon />
+            <span>Create</span>
+          </Link>
         </button>
 
         <button className="sidenav__button">

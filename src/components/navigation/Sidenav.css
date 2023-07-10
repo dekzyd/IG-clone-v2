@@ -39,7 +39,7 @@ body {
   background-color: var(--hover-color);
 }
 
-.sidenav__button > span,
+.sidenav__button span,
 .av_user > .link {
   font-size: 18px;
   font-weight: bold;
