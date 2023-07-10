@@ -64,7 +64,6 @@ const CreatePost = () => {
       toast.error("There was an error");
       console.log(error);
     }
-    console.log(post);
   };
 
   const clearForm = () => {

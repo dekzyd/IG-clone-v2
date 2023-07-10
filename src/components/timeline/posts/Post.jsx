@@ -12,8 +12,7 @@ import Comments from "./comments/Comments";
 // add comment section
 
 const Post = ({ data, user }) => {
-  // const { user, postImage, likes, timeStamp } = post;
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className="post">

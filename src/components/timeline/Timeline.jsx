@@ -18,7 +18,6 @@ const Timeline = () => {
     const fetchUser = async () => {
       try {
         const userDetails = await Auth.currentAuthenticatedUser();
-        console.log(userDetails);
         const usersList = await API.graphql(graphqlOperation(listUsers));
         const currentUser = usersList.data.listUsers.items.filter(
           (item) => item.uniqueId === userDetails.attributes.sub
@@ -33,6 +32,7 @@ const Timeline = () => {
           const sortedPosts = getPosts.data.listPosts.items.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
+
           setUser(sortedPosts);
         }
       } catch (error) {
