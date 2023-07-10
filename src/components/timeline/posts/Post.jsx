@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
+import ReactTimeAgo from "react-time-ago";
 import { Link } from "react-router-dom";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -10,7 +12,6 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { Avatar } from "@mui/material";
 import "./Post.css";
 import Comments from "./comments/Comments";
-import { useEffect, useState } from "react";
 
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { listComments, listLikes } from "../../../graphql/queries";
@@ -28,45 +29,50 @@ const Post = ({ postData, userSP }) => {
 
   // console.log(userSP[0]);
 
-  useEffect(() => {
-    setLiveUser(userSP[0]);
+  useEffect(
+    () => {
+      //     setLiveUser(userSP[0]);
 
-    const fetchPix = async () => {
-      const user_Image = await Storage.get(userSP[0].avatar, { expires: 60 });
-      setUserO(user_Image);
+      const fetchPix = async () => {
+        //       const user_Image = await Storage.get(userSP[0].avatar, { expires: 60 });
+        const post_Image = await Storage.get(postData.image, { expires: 60 });
+        //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
+        //         expires: 60,
+        //       });
+        //       setUserO(user_Image);
+        setPostMaker(postData.owner);
+        //       console.log(postData.owner);
+        setPostPic(post_Image);
+        //       setPostMakerPix(postOwnerpix);
+        //       // const fetchComments = await API.graphql(graphqlOperation(listComments));
+        //       // setPostComments(
+        //       //   fetchComments.postData.listComments.items.filter((each_comment) => {
+        //       //     return each_comment.post.id === postData.id;
+        //       //   })
+        //       // );
+        //       // const D_Likes = await API.graphql(graphqlOperation(listLikes));
+        //       // set_Likes(
+        //       //   D_Likes.postData.listLikes.items.filter((each_like) => {
+        //       //     return each_like.post.id === postData.id;
+        //       //   })
+        //       // );
+      };
+      fetchPix();
+    },
+    [
+      // postData.id,
+      // postData.image,
+      // postData.owner,
+      // userSP,
+      // _likes,
+      // postComments,
+    ]
+  );
 
-      const post_Image = await Storage.get(postData.image, { expires: 60 });
-      setPostMaker(postData.owner);
-
-      const postOwnerpix = await Storage.get(postData.owner.avatar, {
-        expires: 60,
-      });
-      setPostPic(post_Image);
-      setPostMakerPix(postOwnerpix);
-
-      // const fetchComments = await API.graphql(graphqlOperation(listComments));
-      // setPostComments(
-      //   fetchComments.postData.listComments.items.filter((each_comment) => {
-      //     return each_comment.post.id === postData.id;
-      //   })
-      // );
-
-      // const D_Likes = await API.graphql(graphqlOperation(listLikes));
-      // set_Likes(
-      //   D_Likes.postData.listLikes.items.filter((each_like) => {
-      //     return each_like.post.id === postData.id;
-      //   })
-      // );
-    };
-    fetchPix();
-  }, [
-    _likes,
-    postComments,
-    postData.id,
-    postData.image,
-    postData.owner,
-    userSP,
-  ]);
+  // const [viewComment, setViewComment] = useState(false);
+  // const handleView = () => {
+  //   setViewComment(true);
+  // };
 
   return (
     <div className="post">
@@ -74,21 +80,24 @@ const Post = ({ postData, userSP }) => {
         <div className="post__headerAuthor">
           <Link to={`profile/${postMaker.id}`}>
             {postMakerPix ? (
-              <img src={postMakerPix} alt="post creators pix" />
+              <Avatar src={postMakerPix} className="avatar"></Avatar>
             ) : (
-              <Avatar className="avatar">R</Avatar>
+              <Avatar className="avatar">
+                {postData.owner.username.charAt(0).toUpperCase()}
+              </Avatar>
             )}
           </Link>
-          {/* {userSP} . <span>{timeStamp}</span> */}
-          sammy . <span>12hrs</span>
+          <p>
+            {postMaker.username} .{" "}
+            <span>
+              <ReactTimeAgo date={postData.createdAt} locale="en-US" />
+            </span>
+          </p>
         </div>
         <MoreHorizIcon />
       </div>
       <div className="post__image">
-        <img
-          src="https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?auto=compress&cs=tinysrgb&w=400"
-          alt="post"
-        />
+        <img src={postPic} alt="post-image" />
       </div>
       <div className="post__footer">
         <div className="post__footerIcons">
