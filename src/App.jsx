@@ -6,6 +6,9 @@ import SettingsPage from "./pages/SettingsPage";
 import CreatePost from "./pages/CreatePost";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import "@aws-amplify/ui-react/styles.css";
 import { withAuthenticator } from "@aws-amplify/ui-react";
 
@@ -36,7 +39,12 @@ function App({ signOut, user }) {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <ToastContainer position="top-center" autoClose="2000"></ToastContainer>
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default withAuthenticator(App);
