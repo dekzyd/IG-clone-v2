@@ -3,6 +3,7 @@ import HomeLayout from "./pages/HomeLayout";
 import Homepage from "./pages/Homepage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
+import CreatePost from "./pages/CreatePost";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "@aws-amplify/ui-react/styles.css";
@@ -26,6 +27,10 @@ function App({ signOut, user }) {
         {
           path: "settings",
           element: <SettingsPage user={user} />,
+        },
+        {
+          path: "add_post",
+          element: <CreatePost />,
         },
       ],
     },
