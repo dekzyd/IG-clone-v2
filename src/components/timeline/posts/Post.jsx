@@ -99,7 +99,7 @@ const Post = ({ postData, user }) => {
   //   setViewComment(true);
   // };
 
-  const handlePostLike = async (set_Liked) => {
+  const handlePostLike = async (set_Liked, setPostLikesNum) => {
     try {
       const likesData = await API.graphql(graphqlOperation(listLikes));
       const likesArray = likesData.data.listLikes.items;
@@ -125,6 +125,7 @@ const Post = ({ postData, user }) => {
           })
         );
         set_Liked(false);
+        setPostLikesNum(postLikesNum - 1);
       } else {
         await API.graphql(
           graphqlOperation(createLike, {
@@ -135,6 +136,7 @@ const Post = ({ postData, user }) => {
           })
         );
         set_Liked(true);
+        setPostLikesNum(postLikesNum + 1);
       }
     } catch (error) {
       console.log(error);
@@ -213,14 +215,14 @@ const Post = ({ postData, user }) => {
               <FavoriteIcon
                 sx={{ color: "#bf1d32" }}
                 onClick={() => {
-                  handlePostLike(set_Liked);
+                  handlePostLike(set_Liked, setPostLikesNum);
                 }}
                 className="postIcon"
               />
             ) : (
               <FavoriteBorderIcon
                 onClick={() => {
-                  handlePostLike(set_Liked);
+                  handlePostLike(set_Liked, setPostLikesNum);
                 }}
                 className="postIcon"
               />
