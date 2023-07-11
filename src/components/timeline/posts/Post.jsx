@@ -2,11 +2,12 @@
 import { useEffect, useState } from "react";
 import ReactTimeAgo from "react-time-ago";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-// import IconButton from "@mui/material/IconButton";
+
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -31,12 +32,11 @@ const Post = ({ postData, user }) => {
   const [liveUser, setLiveUser] = useState("");
   const [userO, setUserO] = useState("");
   const [postPic, setPostPic] = useState("");
-  const [postComments, setPostComments] = useState("");
+  const [postComments, setPostComments] = useState([]);
   const [_liked, set_Liked] = useState(false);
   const [postLikesNum, setPostLikesNum] = useState("");
-
-  // console.log(user[0]);
-  // console.log(postData);
+  const [showWords, setShowWords] = useState(false);
+  const [seeComments, setSeeComments] = useState(false);
 
   useEffect(
     () => {
@@ -53,14 +53,16 @@ const Post = ({ postData, user }) => {
         setPostMaker(postData.owner);
         setPostPic(post_Image);
         //       setPostMakerPix(postOwnerpix);
-        //       // const fetchComments = await API.graphql(graphqlOperation(listComments));
-        //       // setPostComments(
-        //       //   fetchComments.postData.listComments.items.filter((each_comment) => {
-        //       //     return each_comment.post.id === postData.id;
-        //       //   })
-        //       // );
 
-        // Likes
+        // get post comments
+        const fetchComments = await API.graphql(graphqlOperation(listComments));
+        setPostComments(
+          fetchComments.data.listComments.items.filter((comment) => {
+            return comment.post.id === postData.id;
+          })
+        );
+
+        // get post Likes
         const get_Likes = await API.graphql(graphqlOperation(listLikes));
 
         // total likes on post
@@ -95,11 +97,6 @@ const Post = ({ postData, user }) => {
       // postComments,
     ]
   );
-
-  // const [viewComment, setViewComment] = useState(false);
-  // const handleView = () => {
-  //   setViewComment(true);
-  // };
 
   const handlePostLike = async (set_Liked, setPostLikesNum) => {
     try {
@@ -145,26 +142,22 @@ const Post = ({ postData, user }) => {
     }
   };
 
-  // const toggleText = () => {
-  //   setShowText(!showText);
-  // };
+  const handlePostComment = async (newComment, setNewComment) => {
+    console.log(newComment);
 
-  const handlePostComment = async () => {
-    console.log("comment on post");
-
-    //  !inputValue
-    //    ? toast("Input filed cannot be empty")
-    //    : await API.graphql(
-    //        graphqlOperation(createComment, {
-    //          input: {
-    //            content: inputValue,
-    //            userCommentsId: currUser.id,
-    //            postCommentsId: postData.id,
-    //          },
-    //        })
-    //      );
-    //  toast("Comment added");
-    //  setInputValue("");
+    !newComment
+      ? toast.warning("Comment field can't be empty.")
+      : await API.graphql(
+          graphqlOperation(createComment, {
+            input: {
+              content: newComment,
+              userCommentsId: user[0].id,
+              postCommentsId: postData.id,
+            },
+          })
+        );
+    toast.success("Comment added");
+    setNewComment("");
   };
 
   const handlePostShare = async () => {
@@ -245,7 +238,11 @@ const Post = ({ postData, user }) => {
           <p className="_liked">{postLikesNum} Likes</p>
         )}
       </div>
-      <Comments />
+      <Comments
+        postComments={postComments}
+        handlePostComment={handlePostComment}
+      />
+      {/* comments section */}
     </div>
   );
 };
