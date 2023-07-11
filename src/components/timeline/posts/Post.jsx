@@ -5,43 +5,50 @@ import { Link } from "react-router-dom";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
+import FavoriteIcon from "@mui/icons-material/Favorite";
+// import IconButton from "@mui/material/IconButton";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { Avatar } from "@mui/material";
+
 import "./Post.css";
 import Comments from "./comments/Comments";
 
 import { API, Storage, graphqlOperation } from "aws-amplify";
 import { listComments, listLikes } from "../../../graphql/queries";
+import {
+  createComment,
+  createLike,
+  deleteLike,
+} from "../../../graphql/mutations";
 
 // add comments section
 
-const Post = ({ postData, userSP }) => {
+const Post = ({ postData, user }) => {
   const [postMakerPix, setPostMakerPix] = useState("");
   const [postMaker, setPostMaker] = useState("");
   const [liveUser, setLiveUser] = useState("");
   const [userO, setUserO] = useState("");
   const [postPic, setPostPic] = useState("");
   const [postComments, setPostComments] = useState("");
-  const [_likes, set_Likes] = useState([]);
+  const [_likes, set_Likes] = useState(false);
 
-  // console.log(userSP[0]);
+  // console.log(user);
+  // console.log(postData);
 
   useEffect(
     () => {
-      //     setLiveUser(userSP[0]);
+      setLiveUser(user);
 
       const fetchPix = async () => {
-        //       const user_Image = await Storage.get(userSP[0].avatar, { expires: 60 });
+        //       const user_Image = await Storage.get(user.avatar, { expires: 60 });
         const post_Image = await Storage.get(postData.image, { expires: 60 });
         //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
         //         expires: 60,
         //       });
         //       setUserO(user_Image);
         setPostMaker(postData.owner);
-        //       console.log(postData.owner);
         setPostPic(post_Image);
         //       setPostMakerPix(postOwnerpix);
         //       // const fetchComments = await API.graphql(graphqlOperation(listComments));
@@ -52,7 +59,7 @@ const Post = ({ postData, userSP }) => {
         //       // );
         //       // const D_Likes = await API.graphql(graphqlOperation(listLikes));
         //       // set_Likes(
-        //       //   D_Likes.postData.listLikes.items.filter((each_like) => {
+        //       //   D_Likes.data.listLikes.items.filter((each_like) => {
         //       //     return each_like.post.id === postData.id;
         //       //   })
         //       // );
@@ -63,7 +70,7 @@ const Post = ({ postData, userSP }) => {
       // postData.id,
       // postData.image,
       // postData.owner,
-      // userSP,
+      // user,
       // _likes,
       // postComments,
     ]
@@ -73,6 +80,84 @@ const Post = ({ postData, userSP }) => {
   // const handleView = () => {
   //   setViewComment(true);
   // };
+
+  const handlePostLike = async () => {
+    try {
+      const likesData = await API.graphql(graphqlOperation(listLikes));
+      const likesArray = likesData.data.listLikes.items;
+      // console.log({ likes: likesArray });
+      let likedPost = false;
+      let Index;
+      for (let i = 0; i < likesArray.length; i++) {
+        if (
+          likesArray[i].post.id === postData.id &&
+          likesArray[i].user.id === user.id
+        ) {
+          likedPost = true;
+          Index = i;
+          break;
+        }
+      }
+      // likedPost
+      //   ? await API.graphql(
+      //       graphqlOperation(deleteLike, {
+      //         input: {
+      //           id: likesArray[Index].id,
+      //         },
+      //       })
+      //     )
+      //   : await API.graphql(
+      //       graphqlOperation(createLike, {
+      //         input: {
+      //           userLikesId: user.id,
+      //           postLikesId: postData.id,
+      //         },
+      //       })
+      //     );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const toggleText = () => {
+  //   setShowText(!showText);
+  // };
+
+  const handlePostComment = async () => {
+    console.log("comment on post");
+
+    //  !inputValue
+    //    ? toast("Input filed cannot be empty")
+    //    : await API.graphql(
+    //        graphqlOperation(createComment, {
+    //          input: {
+    //            content: inputValue,
+    //            userCommentsId: currUser.id,
+    //            postCommentsId: postData.id,
+    //          },
+    //        })
+    //      );
+    //  toast("Comment added");
+    //  setInputValue("");
+  };
+
+  const handlePostShare = async () => {
+    console.log("share post");
+
+    //  try {
+    //    if (navigator.share) {
+    //      await navigator.share({
+    //        title: `${postData.title}`,
+    //        text: `${postData.description}`,
+    //        url: "https://6467c48fa1ba7459514feffd--classy-beijinho-4f97d5.netlify.app/",
+    //      });
+    //    } else {
+    //      alert("Sharing is not supported on this browser");
+    //    }
+    //  } catch (error) {
+    //    console.log({ "Share Error": error.message });
+    //  }
+  };
 
   return (
     <div className="post">
@@ -102,12 +187,26 @@ const Post = ({ postData, userSP }) => {
       <div className="post__footer">
         <div className="post__footerIcons">
           <div className="post__iconsMain">
-            <FavoriteBorderIcon className="postIcon" />
-            <ChatBubbleOutlineIcon className="postIcon" />
-            <TelegramIcon className="postIcon" />
+            {_likes ? (
+              <FavoriteIcon
+                sx={{ color: "#bf1d32" }}
+                onClick={handlePostLike}
+                className="postIcon"
+              />
+            ) : (
+              <FavoriteBorderIcon
+                onClick={handlePostLike}
+                className="postIcon"
+              />
+            )}
+            <ChatBubbleOutlineIcon
+              onClick={handlePostComment}
+              className="postIcon"
+            />
+            <TelegramIcon onClick={handlePostShare} className="postIcon" />
           </div>
           <div className="post__iconSave">
-            <BookmarkBorderIcon className="postIcon" />
+            <BookmarkBorderIcon className="postIcon__bkmk" />
           </div>
         </div>
         <p className="_likes">245 _likes</p>

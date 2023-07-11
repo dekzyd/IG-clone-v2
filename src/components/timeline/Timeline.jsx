@@ -12,7 +12,7 @@ import { listPosts } from "../../graphql/queries";
 const Timeline = () => {
   const [updateProfile, setUpdateProfile] = useState(false);
   const [posts, setPosts] = useState([]);
-  const [userSP, setUserSP] = useState({});
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -22,18 +22,18 @@ const Timeline = () => {
         const currentUser = usersList.data.listUsers.items.filter(
           (item) => item.uniqueId === userDetails.attributes.sub
         );
+        setUser(currentUser);
 
         if (currentUser.length < 1 || !usersList) {
           setUpdateProfile(true);
           toast.warning("You need to update your Profile");
         } else {
           const getPosts = await API.graphql(graphqlOperation(listPosts));
-          setPosts(getPosts.data.listPosts.items);
           const sortedPosts = getPosts.data.listPosts.items.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
 
-          setUserSP(sortedPosts);
+          setPosts(sortedPosts);
         }
       } catch (error) {
         console.log(error);
@@ -47,7 +47,7 @@ const Timeline = () => {
       <div className="timeline__left">
         <div className="timeline_posts">
           {posts.map((post, index) => (
-            <Post key={index} postData={post} userSP={userSP} />
+            <Post key={index} postData={post} user={user} />
           ))}
         </div>
       </div>
