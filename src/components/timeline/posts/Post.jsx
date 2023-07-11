@@ -235,7 +235,11 @@ const Post = ({ postData, user }) => {
             <BookmarkBorderIcon className="postIcon__bkmk" />
           </div>
         </div>
-        <p className="_liked">245 _liked</p>
+        {postLikesNum === 1 ? (
+          <p className="_liked">{postLikesNum} Like</p>
+        ) : (
+          <p className="_liked">{postLikesNum} Likes</p>
+        )}
       </div>
       <Comments />
     </div>
