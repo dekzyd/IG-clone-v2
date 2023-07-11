@@ -59,6 +59,8 @@ const Post = ({ postData, user }) => {
         //       //     return each_comment.post.id === postData.id;
         //       //   })
         //       // );
+
+        // Likes
         const get_Likes = await API.graphql(graphqlOperation(listLikes));
 
         // total likes on post
