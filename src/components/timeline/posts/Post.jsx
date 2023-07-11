@@ -32,17 +32,19 @@ const Post = ({ postData, user }) => {
   const [userO, setUserO] = useState("");
   const [postPic, setPostPic] = useState("");
   const [postComments, setPostComments] = useState("");
-  const [_likes, set_Likes] = useState(false);
+  const [_liked, set_Liked] = useState(false);
+  const [postLikesNum, setPostLikesNum] = useState("");
 
-  // console.log(user);
+  // console.log(user[0]);
   // console.log(postData);
 
   useEffect(
     () => {
-      setLiveUser(user);
+      setLiveUser(user[0]);
+      // console.log(user[0]);
 
       const fetchPix = async () => {
-        //       const user_Image = await Storage.get(user.avatar, { expires: 60 });
+        //       const user_Image = await Storage.get(user[0].avatar, { expires: 60 });
         const post_Image = await Storage.get(postData.image, { expires: 60 });
         //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
         //         expires: 60,
@@ -57,12 +59,28 @@ const Post = ({ postData, user }) => {
         //       //     return each_comment.post.id === postData.id;
         //       //   })
         //       // );
-        //       // const D_Likes = await API.graphql(graphqlOperation(listLikes));
-        //       // set_Likes(
-        //       //   D_Likes.data.listLikes.items.filter((each_like) => {
-        //       //     return each_like.post.id === postData.id;
-        //       //   })
-        //       // );
+        const get_Likes = await API.graphql(graphqlOperation(listLikes));
+
+        // total likes on post
+        const totalPostLikes = get_Likes.data.listLikes.items.filter(
+          (each_like) => {
+            return each_like.post.id === postData.id;
+          }
+        );
+        setPostLikesNum(totalPostLikes.length);
+        // check if user has liked post
+        const postLikedByUser = get_Likes.data.listLikes.items.filter(
+          (each_like) => {
+            return (
+              each_like.post.id === postData.id &&
+              each_like.user.id === user[0].id
+            );
+          }
+        );
+
+        if (postLikedByUser.length > 0) {
+          set_Liked(true);
+        }
       };
       fetchPix();
     },
@@ -71,7 +89,7 @@ const Post = ({ postData, user }) => {
       // postData.image,
       // postData.owner,
       // user,
-      // _likes,
+      // _liked,
       // postComments,
     ]
   );
@@ -81,7 +99,7 @@ const Post = ({ postData, user }) => {
   //   setViewComment(true);
   // };
 
-  const handlePostLike = async () => {
+  const handlePostLike = async (set_Liked) => {
     try {
       const likesData = await API.graphql(graphqlOperation(listLikes));
       const likesArray = likesData.data.listLikes.items;
@@ -91,29 +109,33 @@ const Post = ({ postData, user }) => {
       for (let i = 0; i < likesArray.length; i++) {
         if (
           likesArray[i].post.id === postData.id &&
-          likesArray[i].user.id === user.id
+          likesArray[i].user.id === user[0].id
         ) {
           likedPost = true;
           Index = i;
           break;
         }
       }
-      // likedPost
-      //   ? await API.graphql(
-      //       graphqlOperation(deleteLike, {
-      //         input: {
-      //           id: likesArray[Index].id,
-      //         },
-      //       })
-      //     )
-      //   : await API.graphql(
-      //       graphqlOperation(createLike, {
-      //         input: {
-      //           userLikesId: user.id,
-      //           postLikesId: postData.id,
-      //         },
-      //       })
-      //     );
+      if (likedPost) {
+        await API.graphql(
+          graphqlOperation(deleteLike, {
+            input: {
+              id: likesArray[Index].id,
+            },
+          })
+        );
+        set_Liked(false);
+      } else {
+        await API.graphql(
+          graphqlOperation(createLike, {
+            input: {
+              userLikesId: user[0].id,
+              postLikesId: postData.id,
+            },
+          })
+        );
+        set_Liked(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -187,15 +209,19 @@ const Post = ({ postData, user }) => {
       <div className="post__footer">
         <div className="post__footerIcons">
           <div className="post__iconsMain">
-            {_likes ? (
+            {_liked ? (
               <FavoriteIcon
                 sx={{ color: "#bf1d32" }}
-                onClick={handlePostLike}
+                onClick={() => {
+                  handlePostLike(set_Liked);
+                }}
                 className="postIcon"
               />
             ) : (
               <FavoriteBorderIcon
-                onClick={handlePostLike}
+                onClick={() => {
+                  handlePostLike(set_Liked);
+                }}
                 className="postIcon"
               />
             )}
@@ -209,7 +235,7 @@ const Post = ({ postData, user }) => {
             <BookmarkBorderIcon className="postIcon__bkmk" />
           </div>
         </div>
-        <p className="_likes">245 _likes</p>
+        <p className="_liked">245 _liked</p>
       </div>
       <Comments />
     </div>
