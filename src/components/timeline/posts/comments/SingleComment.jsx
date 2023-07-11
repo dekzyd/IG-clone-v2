@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import "./SingleComment.css";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import IconButton from "@mui/material/IconButton";
 
 const SingleComment = ({ comment }) => {
   const { userId, message } = comment;
@@ -10,7 +11,7 @@ const SingleComment = ({ comment }) => {
         <span className="commentor">{userId}</span>
         <span className="comment">{message}</span>
       </p>
-      <FavoriteBorderIcon className="like__comment" />
+      <FavoriteBorderIcon fontSize="15px" className="like__comment" />
     </div>
   );
 };

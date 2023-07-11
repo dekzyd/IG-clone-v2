@@ -13,6 +13,7 @@
 
 .like__comment {
   margin-right: 5px;
+  cursor: pointer;
 }
 
 .comment__item {
