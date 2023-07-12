@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactTimeAgo from "react-time-ago";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-// import IconButton from "@mui/material/IconButton";
+
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
@@ -31,75 +32,72 @@ const Post = ({ postData, user }) => {
   const [liveUser, setLiveUser] = useState("");
   const [userO, setUserO] = useState("");
   const [postPic, setPostPic] = useState("");
-  const [postComments, setPostComments] = useState("");
+  const [postComments, setPostComments] = useState([]);
   const [_liked, set_Liked] = useState(false);
   const [postLikesNum, setPostLikesNum] = useState("");
+  const [showWords, setShowWords] = useState(false);
+  const [seeComments, setSeeComments] = useState(false);
 
-  // console.log(user[0]);
-  // console.log(postData);
+  // reload
+  const [cmtAdded, setCmtAdded] = useState(0);
 
-  useEffect(
-    () => {
-      setLiveUser(user[0]);
-      // console.log(user[0]);
+  useEffect(() => {
+    setLiveUser(user[0]);
+    // console.log(user[0]);
 
-      const fetchPix = async () => {
-        //       const user_Image = await Storage.get(user[0].avatar, { expires: 60 });
-        const post_Image = await Storage.get(postData.image, { expires: 60 });
-        //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
-        //         expires: 60,
-        //       });
-        //       setUserO(user_Image);
-        setPostMaker(postData.owner);
-        setPostPic(post_Image);
-        //       setPostMakerPix(postOwnerpix);
-        //       // const fetchComments = await API.graphql(graphqlOperation(listComments));
-        //       // setPostComments(
-        //       //   fetchComments.postData.listComments.items.filter((each_comment) => {
-        //       //     return each_comment.post.id === postData.id;
-        //       //   })
-        //       // );
+    const fetchPix = async () => {
+      //       const user_Image = await Storage.get(user[0].avatar, { expires: 60 });
+      const post_Image = await Storage.get(postData.image, { expires: 60 });
+      //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
+      //         expires: 60,
+      //       });
+      //       setUserO(user_Image);
+      setPostMaker(postData.owner);
+      setPostPic(post_Image);
+      //       setPostMakerPix(postOwnerpix);
 
-        // Likes
-        const get_Likes = await API.graphql(graphqlOperation(listLikes));
+      // get post comments
+      const fetchComments = await API.graphql(graphqlOperation(listComments));
+      setPostComments(
+        fetchComments.data.listComments.items.filter((comment) => {
+          return comment.post.id === postData.id;
+        })
+      );
 
-        // total likes on post
-        const totalPostLikes = get_Likes.data.listLikes.items.filter(
-          (each_like) => {
-            return each_like.post.id === postData.id;
-          }
-        );
-        setPostLikesNum(totalPostLikes.length);
-        // check if user has liked post
-        const postLikedByUser = get_Likes.data.listLikes.items.filter(
-          (each_like) => {
-            return (
-              each_like.post.id === postData.id &&
-              each_like.user.id === user[0].id
-            );
-          }
-        );
+      // get post Likes
+      const get_Likes = await API.graphql(graphqlOperation(listLikes));
 
-        if (postLikedByUser.length > 0) {
-          set_Liked(true);
+      // total likes on post
+      const totalPostLikes = get_Likes.data.listLikes.items.filter(
+        (each_like) => {
+          return each_like.post.id === postData.id;
         }
-      };
-      fetchPix();
-    },
-    [
-      // postData.id,
-      // postData.image,
-      // postData.owner,
-      // user,
-      // _liked,
-      // postComments,
-    ]
-  );
+      );
+      setPostLikesNum(totalPostLikes.length);
+      // check if user has liked post
+      const postLikedByUser = get_Likes.data.listLikes.items.filter(
+        (each_like) => {
+          return (
+            each_like.post.id === postData.id &&
+            each_like.user.id === user[0].id
+          );
+        }
+      );
 
-  // const [viewComment, setViewComment] = useState(false);
-  // const handleView = () => {
-  //   setViewComment(true);
-  // };
+      if (postLikedByUser.length > 0) {
+        set_Liked(true);
+      }
+    };
+    fetchPix();
+  }, [
+    // postData.id,
+    // postData.image,
+    // postData.owner,
+    // user,
+    // _liked,
+    // postComments,
+    cmtAdded,
+  ]);
 
   const handlePostLike = async (set_Liked, setPostLikesNum) => {
     try {
@@ -145,44 +143,46 @@ const Post = ({ postData, user }) => {
     }
   };
 
-  // const toggleText = () => {
-  //   setShowText(!showText);
-  // };
+  const handlePostComment = async (newComment, setNewComment) => {
+    // console.log(newComment);
 
-  const handlePostComment = async () => {
-    console.log("comment on post");
-
-    //  !inputValue
-    //    ? toast("Input filed cannot be empty")
-    //    : await API.graphql(
-    //        graphqlOperation(createComment, {
-    //          input: {
-    //            content: inputValue,
-    //            userCommentsId: currUser.id,
-    //            postCommentsId: postData.id,
-    //          },
-    //        })
-    //      );
-    //  toast("Comment added");
-    //  setInputValue("");
+    !newComment
+      ? toast.warning("Comment field can't be empty.")
+      : await API.graphql(
+          graphqlOperation(createComment, {
+            input: {
+              content: newComment,
+              userCommentsId: user[0].id,
+              postCommentsId: postData.id,
+            },
+          })
+        );
+    toast.success("Comment added");
+    setNewComment("");
+    setCmtAdded(cmtAdded + 1);
   };
 
   const handlePostShare = async () => {
     console.log("share post");
 
-    //  try {
-    //    if (navigator.share) {
-    //      await navigator.share({
-    //        title: `${postData.title}`,
-    //        text: `${postData.description}`,
-    //        url: "https://6467c48fa1ba7459514feffd--classy-beijinho-4f97d5.netlify.app/",
-    //      });
-    //    } else {
-    //      alert("Sharing is not supported on this browser");
-    //    }
-    //  } catch (error) {
-    //    console.log({ "Share Error": error.message });
-    //  }
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `${postData.title}`,
+          text: `${postData.description}`,
+          //  url: "https://6467c48fa1ba7459514feffd--classy-beijinho-4f97d5.netlify.app/",
+        });
+      } else {
+        alert("Unable to share, We ran into a problem");
+      }
+    } catch (error) {
+      console.log({ "Share Error": error.message });
+    }
+  };
+
+  const inputRef = useRef(null);
+  const commentFocus = () => {
+    inputRef.current.focus();
   };
 
   return (
@@ -230,7 +230,7 @@ const Post = ({ postData, user }) => {
               />
             )}
             <ChatBubbleOutlineIcon
-              onClick={handlePostComment}
+              onClick={commentFocus}
               className="postIcon"
             />
             <TelegramIcon onClick={handlePostShare} className="postIcon" />
@@ -245,7 +245,12 @@ const Post = ({ postData, user }) => {
           <p className="_liked">{postLikesNum} Likes</p>
         )}
       </div>
-      <Comments />
+      <Comments
+        postComments={postComments}
+        handlePostComment={handlePostComment}
+        inputRef={inputRef}
+      />
+      {/* comments section */}
     </div>
   );
 };
