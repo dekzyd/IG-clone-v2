@@ -30,31 +30,27 @@ const Post = ({ postData, user }) => {
   const [postMakerPix, setPostMakerPix] = useState("");
   const [postMaker, setPostMaker] = useState("");
   const [liveUser, setLiveUser] = useState("");
-  const [userO, setUserO] = useState("");
+
   const [postPic, setPostPic] = useState("");
   const [postComments, setPostComments] = useState([]);
   const [_liked, set_Liked] = useState(false);
   const [postLikesNum, setPostLikesNum] = useState("");
-  const [showWords, setShowWords] = useState(false);
-  const [seeComments, setSeeComments] = useState(false);
 
   // reload
   const [cmtAdded, setCmtAdded] = useState(0);
 
   useEffect(() => {
     setLiveUser(user[0]);
-    // console.log(user[0]);
 
     const fetchPix = async () => {
-      //       const user_Image = await Storage.get(user[0].avatar, { expires: 60 });
       const post_Image = await Storage.get(postData.image, { expires: 60 });
-      //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
-      //         expires: 60,
-      //       });
-      //       setUserO(user_Image);
+      const postOwnerpix = await Storage.get(postData.owner.avatar, {
+        expires: 60,
+      });
+
       setPostMaker(postData.owner);
       setPostPic(post_Image);
-      //       setPostMakerPix(postOwnerpix);
+      setPostMakerPix(postOwnerpix);
 
       // get post comments
       const fetchComments = await API.graphql(graphqlOperation(listComments));
@@ -89,21 +85,13 @@ const Post = ({ postData, user }) => {
       }
     };
     fetchPix();
-  }, [
-    // postData.id,
-    // postData.image,
-    // postData.owner,
-    // user,
-    // _liked,
-    // postComments,
-    cmtAdded,
-  ]);
+  }, [cmtAdded]);
 
   const handlePostLike = async (set_Liked, setPostLikesNum) => {
     try {
       const likesData = await API.graphql(graphqlOperation(listLikes));
       const likesArray = likesData.data.listLikes.items;
-      // console.log({ likes: likesArray });
+
       let likedPost = false;
       let Index;
       for (let i = 0; i < likesArray.length; i++) {
@@ -144,8 +132,6 @@ const Post = ({ postData, user }) => {
   };
 
   const handlePostComment = async (newComment, setNewComment) => {
-    // console.log(newComment);
-
     !newComment
       ? toast.warning("Comment field can't be empty.")
       : await API.graphql(
@@ -245,12 +231,12 @@ const Post = ({ postData, user }) => {
           <p className="_liked">{postLikesNum} Likes</p>
         )}
       </div>
+      {/* comments section */}
       <Comments
         postComments={postComments}
         handlePostComment={handlePostComment}
         inputRef={inputRef}
       />
-      {/* comments section */}
     </div>
   );
 };

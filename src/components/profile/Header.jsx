@@ -12,6 +12,8 @@ const Header = ({ user }) => {
   const following_length = 2546;
   const fullName = "Abudulaye habibi";
 
+  const queryParams = window.location.href.split("/");
+
   const userDetails = {
     name: "watamii",
     username: "indigolayo",
@@ -19,25 +21,13 @@ const Header = ({ user }) => {
     phone: "7864563",
   };
 
-  const newUser = async () => {
-    try {
-      await API.graphql(graphqlOperation(createUser, { input: userDetails }));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getUsers = async () => {
-    try {
-      const usersList = await API.graphql(graphqlOperation(listUsers));
-      console.log(usersList);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
-    getUsers();
+    const fetchUser = async () => {
+      const id = queryParams[queryParams.length - 1];
+      console.log(id);
+    };
+
+    fetchUser();
   }, []);
 
   return (
@@ -52,7 +42,6 @@ const Header = ({ user }) => {
       <div className="flex items-center justify-center flex-col col-span-2">
         <div className="container flex items-center">
           <p className="text-2xl mr-4">{profileUsername}</p>
-          <button onClick={newUser}> create user</button>
 
           <button
             className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"

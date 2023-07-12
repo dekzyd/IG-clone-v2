@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import "./App.css";
 import HomeLayout from "./pages/HomeLayout";
 import Homepage from "./pages/Homepage";
@@ -25,7 +26,7 @@ function App({ signOut, user }) {
         },
         {
           path: "profile/:id",
-          element: <ProfilePage user={user} />,
+          element: <ProfilePage />,
         },
         {
           path: "settings",

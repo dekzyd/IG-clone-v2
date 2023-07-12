@@ -1,4 +1,7 @@
 /* eslint-disable react/prop-types */
+import { Auth, API, graphqlOperation } from "aws-amplify";
+import { listUsers } from "../../graphql/queries";
+
 import "./Sidenav.css";
 import { Link } from "react-router-dom";
 
@@ -11,9 +14,32 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Avatar } from "@mui/material";
+import { useEffect, useState } from "react";
 
-const Sidenav = ({ signOut, user }) => {
-  const username = user?.username;
+const Sidenav = ({ signOut }) => {
+  const [user, setUser] = useState("");
+  const [userPix, setUserPix] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userDetails = await Auth.currentAuthenticatedUser();
+        const usersList = await API.graphql(graphqlOperation(listUsers));
+        const currentUser = usersList.data.listUsers.items.filter(
+          (item) => item.uniqueId === userDetails.attributes.sub
+        );
+        console.log(currentUser);
+        setUser(currentUser[0]);
+        const userPix = await Storage.get(currentUser[0].avatar, {
+          expires: 60,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <div className="sidenav">
@@ -57,10 +83,10 @@ const Sidenav = ({ signOut, user }) => {
         <button className="sidenav__button">
           <div className="av_user">
             <Avatar src="\images\image1.jpg">
-              {username ? username.charAt(0).toUpperCase() : "A"}
+              {user.username ? user.username.charAt(0).toUpperCase() : "A"}
             </Avatar>
-            <Link to={`/profile/${username}`} className="link">
-              <span>{username}</span>
+            <Link to={`/profile/${user.id}`} className="link">
+              <span>{user.username}</span>
             </Link>
           </div>
           <div className="logout__button" onClick={signOut}>
