@@ -2,13 +2,16 @@
 import { useState } from "react";
 import "./Comments.css";
 import SingleComment from "./SingleComment";
-import EmojiPicker from "emoji-picker-react";
-import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
+// import EmojiPicker from "emoji-picker-react";
+// import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
 import InputEmoji from "react-input-emoji";
 
 const Comments = ({ postComments, handlePostComment }) => {
+  // sort comments in ascending order
+  postComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   const [newComment, setNewComment] = useState("");
-  const [viewEmojiPlane, setViewEmojiPlane] = useState(false);
+  // const [viewEmojiPlane, setViewEmojiPlane] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   const handleFormSubmit = () => {};
