@@ -165,19 +165,19 @@ const Post = ({ postData, user }) => {
   const handlePostShare = async () => {
     console.log("share post");
 
-    //  try {
-    //    if (navigator.share) {
-    //      await navigator.share({
-    //        title: `${postData.title}`,
-    //        text: `${postData.description}`,
-    //        url: "https://6467c48fa1ba7459514feffd--classy-beijinho-4f97d5.netlify.app/",
-    //      });
-    //    } else {
-    //      alert("Sharing is not supported on this browser");
-    //    }
-    //  } catch (error) {
-    //    console.log({ "Share Error": error.message });
-    //  }
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `${postData.title}`,
+          text: `${postData.description}`,
+          //  url: "https://6467c48fa1ba7459514feffd--classy-beijinho-4f97d5.netlify.app/",
+        });
+      } else {
+        alert("Unable to share, We ran into a problem");
+      }
+    } catch (error) {
+      console.log({ "Share Error": error.message });
+    }
   };
 
   const inputRef = useRef(null);
