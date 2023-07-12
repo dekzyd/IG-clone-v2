@@ -2,10 +2,12 @@
 import { useState } from "react";
 import "./Comments.css";
 import SingleComment from "./SingleComment";
-// import { comments } from "../../../../data";
+import EmojiPicker from "emoji-picker-react";
+import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
 
 const Comments = ({ postComments, handlePostComment }) => {
   const [newComment, setNewComment] = useState("");
+  const [viewEmojiPlane, setViewEmojiPlane] = useState(false);
 
   const handleFormSubmit = () => {};
 
@@ -29,6 +31,11 @@ const Comments = ({ postComments, handlePostComment }) => {
           className="submit__input"
           placeholder="Add comment ..."
         />
+        <EmojiEmotions
+          onClick={() => setViewEmojiPlane(!viewEmojiPlane)}
+          className="emojiIcon"
+          sx={{ fontSize: 25 }}
+        />
         <button
           type="button"
           className="submit__comment"
@@ -38,6 +45,24 @@ const Comments = ({ postComments, handlePostComment }) => {
         >
           Post
         </button>
+        {viewEmojiPlane && (
+          <div className="emojiplane">
+            <EmojiPicker
+              searchPlaceholder="Ara"
+              emojiStyle="native"
+              theme="dark"
+              onEmojiClick={(e) => {
+                setNewComment((prevInput) => prevInput + e.emoji);
+                setViewEmojiPlane(false);
+              }}
+              previewConfig={{
+                showPreview: true,
+                defaultEmoji: "1f92a",
+                defaultCaption: "Add your emoji here...",
+              }}
+            />
+          </div>
+        )}
       </form>
     </div>
   );

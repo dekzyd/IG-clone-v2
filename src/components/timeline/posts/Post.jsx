@@ -38,65 +38,66 @@ const Post = ({ postData, user }) => {
   const [showWords, setShowWords] = useState(false);
   const [seeComments, setSeeComments] = useState(false);
 
-  useEffect(
-    () => {
-      setLiveUser(user[0]);
-      // console.log(user[0]);
+  // reload
+  const [cmtAdded, setCmtAdded] = useState(0);
 
-      const fetchPix = async () => {
-        //       const user_Image = await Storage.get(user[0].avatar, { expires: 60 });
-        const post_Image = await Storage.get(postData.image, { expires: 60 });
-        //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
-        //         expires: 60,
-        //       });
-        //       setUserO(user_Image);
-        setPostMaker(postData.owner);
-        setPostPic(post_Image);
-        //       setPostMakerPix(postOwnerpix);
+  useEffect(() => {
+    setLiveUser(user[0]);
+    // console.log(user[0]);
 
-        // get post comments
-        const fetchComments = await API.graphql(graphqlOperation(listComments));
-        setPostComments(
-          fetchComments.data.listComments.items.filter((comment) => {
-            return comment.post.id === postData.id;
-          })
-        );
+    const fetchPix = async () => {
+      //       const user_Image = await Storage.get(user[0].avatar, { expires: 60 });
+      const post_Image = await Storage.get(postData.image, { expires: 60 });
+      //       const postOwnerpix = await Storage.get(postData.owner.avatar, {
+      //         expires: 60,
+      //       });
+      //       setUserO(user_Image);
+      setPostMaker(postData.owner);
+      setPostPic(post_Image);
+      //       setPostMakerPix(postOwnerpix);
 
-        // get post Likes
-        const get_Likes = await API.graphql(graphqlOperation(listLikes));
+      // get post comments
+      const fetchComments = await API.graphql(graphqlOperation(listComments));
+      setPostComments(
+        fetchComments.data.listComments.items.filter((comment) => {
+          return comment.post.id === postData.id;
+        })
+      );
 
-        // total likes on post
-        const totalPostLikes = get_Likes.data.listLikes.items.filter(
-          (each_like) => {
-            return each_like.post.id === postData.id;
-          }
-        );
-        setPostLikesNum(totalPostLikes.length);
-        // check if user has liked post
-        const postLikedByUser = get_Likes.data.listLikes.items.filter(
-          (each_like) => {
-            return (
-              each_like.post.id === postData.id &&
-              each_like.user.id === user[0].id
-            );
-          }
-        );
+      // get post Likes
+      const get_Likes = await API.graphql(graphqlOperation(listLikes));
 
-        if (postLikedByUser.length > 0) {
-          set_Liked(true);
+      // total likes on post
+      const totalPostLikes = get_Likes.data.listLikes.items.filter(
+        (each_like) => {
+          return each_like.post.id === postData.id;
         }
-      };
-      fetchPix();
-    },
-    [
-      // postData.id,
-      // postData.image,
-      // postData.owner,
-      // user,
-      // _liked,
-      // postComments,
-    ]
-  );
+      );
+      setPostLikesNum(totalPostLikes.length);
+      // check if user has liked post
+      const postLikedByUser = get_Likes.data.listLikes.items.filter(
+        (each_like) => {
+          return (
+            each_like.post.id === postData.id &&
+            each_like.user.id === user[0].id
+          );
+        }
+      );
+
+      if (postLikedByUser.length > 0) {
+        set_Liked(true);
+      }
+    };
+    fetchPix();
+  }, [
+    // postData.id,
+    // postData.image,
+    // postData.owner,
+    // user,
+    // _liked,
+    // postComments,
+    cmtAdded,
+  ]);
 
   const handlePostLike = async (set_Liked, setPostLikesNum) => {
     try {
@@ -143,7 +144,7 @@ const Post = ({ postData, user }) => {
   };
 
   const handlePostComment = async (newComment, setNewComment) => {
-    console.log(newComment);
+    // console.log(newComment);
 
     !newComment
       ? toast.warning("Comment field can't be empty.")
@@ -158,6 +159,7 @@ const Post = ({ postData, user }) => {
         );
     toast.success("Comment added");
     setNewComment("");
+    setCmtAdded(cmtAdded + 1);
   };
 
   const handlePostShare = async () => {
