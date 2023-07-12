@@ -17,10 +17,10 @@
 
 .add__comment {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   grid-column-gap: 5px;
-  border: 0.5px solid grey;
-  border-radius: 2px;
+  /* border: 0.5px solid grey; */
+  /* border-radius: 2px; */
 }
 .submit__comment {
   font-size: 17px;

@@ -4,25 +4,39 @@ import "./Comments.css";
 import SingleComment from "./SingleComment";
 import EmojiPicker from "emoji-picker-react";
 import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
+import InputEmoji from "react-input-emoji";
 
 const Comments = ({ postComments, handlePostComment }) => {
   const [newComment, setNewComment] = useState("");
   const [viewEmojiPlane, setViewEmojiPlane] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   const handleFormSubmit = () => {};
 
   return (
     <div className="post__comments">
       {/* if comment length > 3 only show 3 comments and give button to show all */}
-      {/* {postComments.length > 2 ? (
-        <button className="show_all">view more </button>
-      ) : null} */}
-      {postComments.map((comment) => {
-        return <SingleComment key={comment.id} comment={comment} />;
-      })}
+      {postComments.length > 3 ? (
+        <button
+          className="show_all"
+          onClick={() => {
+            setShowAll(!showAll);
+          }}
+        >
+          view {showAll ? "less..." : "more..."}{" "}
+        </button>
+      ) : null}
+
+      {showAll
+        ? postComments.map((comment) => {
+            return <SingleComment key={comment.id} comment={comment} />;
+          })
+        : postComments.slice(0, 3).map((comment) => {
+            return <SingleComment key={comment.id} comment={comment} />;
+          })}
 
       <form className="add__comment" onSubmit={handleFormSubmit}>
-        <input
+        {/* <input
           type="text"
           name="comment"
           id="comment"
@@ -35,6 +49,14 @@ const Comments = ({ postComments, handlePostComment }) => {
           onClick={() => setViewEmojiPlane(!viewEmojiPlane)}
           className="emojiIcon"
           sx={{ fontSize: 25 }}
+        /> */}
+        <InputEmoji
+          value={newComment}
+          name="comment"
+          id="comment"
+          onChange={(value) => setNewComment(value)}
+          cleanOnEnter
+          placeholder="Add comment ..."
         />
         <button
           type="button"
@@ -45,7 +67,7 @@ const Comments = ({ postComments, handlePostComment }) => {
         >
           Post
         </button>
-        {viewEmojiPlane && (
+        {/* {viewEmojiPlane && (
           <div className="emojiplane">
             <EmojiPicker
               searchPlaceholder="Ara"
@@ -62,7 +84,7 @@ const Comments = ({ postComments, handlePostComment }) => {
               }}
             />
           </div>
-        )}
+        )} */}
       </form>
     </div>
   );
