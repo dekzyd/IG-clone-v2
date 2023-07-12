@@ -6,7 +6,7 @@ import SingleComment from "./SingleComment";
 // import EmojiEmotions from "@mui/icons-material/EmojiEmotions";
 import InputEmoji from "react-input-emoji";
 
-const Comments = ({ postComments, handlePostComment }) => {
+const Comments = ({ postComments, handlePostComment, inputRef }) => {
   // sort comments in ascending order
   postComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
@@ -57,6 +57,8 @@ const Comments = ({ postComments, handlePostComment }) => {
           value={newComment}
           name="comment"
           id="comment"
+          ref={inputRef}
+          onFocus={() => console.log("na me")}
           onChange={(value) => setNewComment(value)}
           cleanOnEnter
           placeholder="Add comment ..."

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactTimeAgo from "react-time-ago";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -180,6 +180,11 @@ const Post = ({ postData, user }) => {
     //  }
   };
 
+  const inputRef = useRef(null);
+  const commentFocus = () => {
+    inputRef.current.focus();
+  };
+
   return (
     <div className="post">
       <div className="post__header">
@@ -225,7 +230,7 @@ const Post = ({ postData, user }) => {
               />
             )}
             <ChatBubbleOutlineIcon
-              onClick={handlePostComment}
+              onClick={commentFocus}
               className="postIcon"
             />
             <TelegramIcon onClick={handlePostShare} className="postIcon" />
@@ -243,6 +248,7 @@ const Post = ({ postData, user }) => {
       <Comments
         postComments={postComments}
         handlePostComment={handlePostComment}
+        inputRef={inputRef}
       />
       {/* comments section */}
     </div>
