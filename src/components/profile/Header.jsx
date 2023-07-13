@@ -1,75 +1,191 @@
 /* eslint-disable react/prop-types */
-import { Auth, API, graphqlOperation } from "aws-amplify";
-import { listUsers } from "../../graphql/queries";
-import { createUser } from "../../graphql/mutations";
+import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
+import { listPosts, listUsers, listFollows } from "../../graphql/queries";
+import { createFollow, deleteFollow } from "../../graphql/mutations";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const Header = ({ user }) => {
-  const profileUsername = "habibi";
-  const photosCount = 25;
-  const followerCount = 153;
-  const following_length = 2546;
-  const fullName = "Abudulaye habibi";
-
+const Header = () => {
   const queryParams = window.location.href.split("/");
-
-  const userDetails = {
-    name: "watamii",
-    username: "indigolayo",
-    gender: "female",
-    phone: "7864563",
-  };
+  const [usersPosts, setUsersPosts] = useState([]);
+  const [profPageOwner, setProfPageOwner] = useState({});
+  const [user, setUser] = useState({});
+  const [profFollowers, setProfFollowers] = useState("");
+  const [profFollowings, setProfFollowings] = useState("");
+  const [profPix, setProfPix] = useState("");
+  const [holder, setHolder] = useState(false);
+  const [followingProf, setFollowingProf] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       const id = queryParams[queryParams.length - 1];
-      console.log(id);
+      // console.log(id);
+
+      const nowUser = await Auth.currentAuthenticatedUser();
+      const PostsArray = await API.graphql(graphqlOperation(listPosts));
+      const usersPostArray = PostsArray.data.listPosts.items.filter((post) => {
+        return post.owner.id === id;
+      });
+      setUsersPosts(usersPostArray);
+
+      const usersArray = await API.graphql(graphqlOperation(listUsers));
+      const currUser = usersArray.data.listUsers.items.filter((user) => {
+        return user.uniqueId === nowUser.attributes.sub;
+      });
+      setUser(currUser[0]);
+
+      const profileOwner = usersArray.data.listUsers.items.filter((user) => {
+        return user.id === id;
+      });
+      setProfPageOwner(profileOwner[0]);
+
+      const fetchFollowers = await API.graphql(graphqlOperation(listFollows));
+      const profileFollowers = fetchFollowers.data.listFollows.items.filter(
+        (follow) => {
+          return follow.starId === id;
+        }
+      );
+      setProfFollowers(profileFollowers);
+
+      const fetchFollowings = fetchFollowers.data.listFollows.items.filter(
+        (each_follow) => {
+          return each_follow.admirerId === id;
+        }
+      );
+      setProfFollowings(fetchFollowings);
+
+      const profileImage = await Storage.get(profileOwner[0].avatar, {
+        expires: 60,
+      });
+      setProfPix(profileImage);
+
+      if (profileOwner[0].id === currUser[0].id) {
+        setHolder(true);
+      }
+
+      console.log(profFollowers);
+      for (let i = 0; i < profFollowers.length; i++) {
+        if (profFollowers[i].admirerId === user.id) {
+          setFollowingProf(true);
+          return;
+        }
+      }
     };
 
     fetchUser();
-  }, []);
+  }, [followingProf]);
+
+  const followProfile = async () => {
+    try {
+      await API.graphql(
+        graphqlOperation(createFollow, {
+          input: {
+            admirerId: user.id,
+            starId: profPageOwner.id,
+          },
+        })
+      );
+      toast.success(`Now following ${profPageOwner.username}`);
+      setFollowingProf(true);
+    } catch (error) {
+      toast.error("error following");
+      console.log(error);
+    }
+  };
+
+  const unFollowProfile = async () => {
+    for (let i = 0; i < profFollowers.length; i++) {
+      if (profFollowers[i].admirerId === user.id) {
+        //unfollow user
+        try {
+          await API.graphql(
+            graphqlOperation(deleteFollow, {
+              input: {
+                id: profFollowers[i].id,
+              },
+            })
+          );
+          toast.success(`Unfollowed ${profPageOwner.username}`);
+          setFollowingProf(false);
+          return;
+        } catch (error) {
+          toast.error("error Unfollowing");
+          console.log(error);
+        }
+      }
+    }
+  };
 
   return (
-    <div className="grid grid-cols-3 gap-4 justify-between mx-auto  mt-6 max-w-screen-lg">
-      <div className="container flex justify-center items-center">
-        <img
-          className="rounded-full h-40 w-40 flex"
-          alt={` profile picture`}
-          src="\images\image1.jpg"
-        />
-      </div>
-      <div className="flex items-center justify-center flex-col col-span-2">
-        <div className="container flex items-center">
-          <p className="text-2xl mr-4">{profileUsername}</p>
+    <>
+      <button className="bg-indigo-600 px-2 py-1 rounded-md text-white absolute left-10">
+        <Link to="/">Back Home</Link>
+      </button>
+      <div className="grid grid-cols-3 gap-4 justify-between mx-auto  mt-6 max-w-screen-lg">
+        <div className="container flex justify-center items-center">
+          <img
+            className="rounded-full h-40 w-40 flex object-cover"
+            alt={` profile picture`}
+            src={profPix}
+          />
+        </div>
+        <div className="flex items-center justify-center flex-col col-span-2">
+          <div className="container flex items-center">
+            <p className="text-2xl mr-4">{profPageOwner.username}</p>
 
-          <button
-            className="bg-blue-medium font-bold text-sm rounded text-white w-20 h-8"
-            type="button"
-          >
-            Follow
-          </button>
-        </div>
-        <div className="container flex mt-4">
-          <>
-            <p className="mr-10">
-              <span className="font-bold">{photosCount}</span> photos
-            </p>
-            <p className="mr-10">
-              <span className="font-bold">{followerCount}</span>
-              {` `}
-              {followerCount === 1 ? `follower` : `followers`}
-            </p>
-            <p className="mr-10">
-              <span className="font-bold">{following_length}</span> following
-            </p>
-          </>
-        </div>
-        <div className="container mt-4">
-          <p className="font-medium">{fullName}</p>
+            {holder ? (
+              <Link to="/settings">
+                <button className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white">
+                  Edit profile
+                </button>
+              </Link>
+            ) : (
+              <div>
+                {!followingProf ? (
+                  <button
+                    className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white"
+                    type="button"
+                    onClick={unFollowProfile}
+                  >
+                    Unfollow
+                  </button>
+                ) : (
+                  <button
+                    className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white"
+                    type="button"
+                    onClick={followProfile}
+                  >
+                    Follow
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="container flex mt-4">
+            <>
+              <p className="mr-10">
+                <span className="font-bold">{usersPosts.length}</span>{" "}
+                {usersPosts.length === 1 ? "photo" : "photos"}
+              </p>
+              <p className="mr-10">
+                <span className="font-bold">{profFollowers.length}</span>
+                {` `}
+                {profFollowers.length === 1 ? `follower` : `followers`}
+              </p>
+              <p className="mr-10">
+                <span className="font-bold">{profFollowings.length}</span>{" "}
+                following
+              </p>
+            </>
+          </div>
+          <div className="container mt-4">
+            <p className="font-medium">{profPageOwner.name}</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
