@@ -1,6 +1,6 @@
-import { photos } from "../../data";
+import Skeleton from "react-loading-skeleton";
 
-// const photos = [];
+const photos = [];
 
 const Photos = () => {
   return (
