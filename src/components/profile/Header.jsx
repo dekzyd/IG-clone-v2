@@ -15,7 +15,7 @@ const Header = () => {
   const [profFollowings, setProfFollowings] = useState("");
   const [profPix, setProfPix] = useState("");
   const [holder, setHolder] = useState(false);
-  const [followingProf, setFollowingProf] = useState("");
+  const [followingProf, setFollowingProf] = useState(false);
   const queryParams = window.location.href.split("/");
 
   useEffect(() => {
@@ -29,6 +29,12 @@ const Header = () => {
         return user.uniqueId === nowUser.attributes.sub;
       });
       setUser(currUser[0]);
+
+      const PostsArray = await API.graphql(graphqlOperation(listPosts));
+      const usersPostArray = PostsArray.data.listPosts.items.filter((post) => {
+        return post.owner.id === id;
+      });
+      setUsersPosts(usersPostArray);
 
       const profileOwner = usersArray.data.listUsers.items.filter((user) => {
         return user.id === id;
@@ -59,19 +65,27 @@ const Header = () => {
         setHolder(true);
       }
 
-      console.log(profFollowers);
-      for (let i = 0; i < profFollowers.length; i++) {
-        if (profFollowers[i].admirerId === user.id) {
-          setFollowingProf(true);
-          return;
-        }
-      }
+      // console.log(profFollowers);
+      // console.log(user);
+      // for (let i = 0; i < profileFollowers.length; i++) {
+      //   if (profileFollowers[i].admirerId === nowUser.attributes.sub) {
+      //     setFollowingProf(true);
+      //     break;
+      //   }
+      // }
     };
 
     fetchUser();
-  }, [followingProf]);
+  }, [profFollowers, profFollowings]);
 
   const followProfile = async () => {
+    for (let i = 0; i < profFollowers.length; i++) {
+      if (profFollowers[i].admirerId === user.id) {
+        setProfFollowers(profFollowers + 1);
+        toast.info(`you're already following ${profPageOwner?.username}`);
+        return;
+      }
+    }
     try {
       await API.graphql(
         graphqlOperation(createFollow, {
@@ -81,8 +95,8 @@ const Header = () => {
           },
         })
       );
+
       toast.success(`Now following ${profPageOwner.username}`);
-      setFollowingProf(true);
     } catch (error) {
       toast.error("error following");
       console.log(error);
@@ -101,8 +115,8 @@ const Header = () => {
               },
             })
           );
-          toast.success(`Unfollowed ${profPageOwner.username}`);
           setFollowingProf(false);
+          toast.success(`Unfollowed ${profPageOwner.username}`);
           return;
         } catch (error) {
           toast.error("error Unfollowing");
@@ -137,23 +151,20 @@ const Header = () => {
               </Link>
             ) : (
               <div>
-                {!followingProf ? (
-                  <button
-                    className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white"
-                    type="button"
-                    onClick={unFollowProfile}
-                  >
-                    Unfollow
-                  </button>
-                ) : (
-                  <button
-                    className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white"
-                    type="button"
-                    onClick={followProfile}
-                  >
-                    Follow
-                  </button>
-                )}
+                <button
+                  className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white mr-2"
+                  type="button"
+                  onClick={followProfile}
+                >
+                  Follow
+                </button>
+                <button
+                  className="bg-indigo-600 px-2 py-1 items-center rounded-md text-white"
+                  type="button"
+                  onClick={unFollowProfile}
+                >
+                  Unfollow
+                </button>
               </div>
             )}
           </div>

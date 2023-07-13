@@ -10,7 +10,7 @@ const SingleComment = ({ comment }) => {
         <span className="commentor">{user.username}</span>
         <span className="comment">{content}</span>
       </p>
-      <FavoriteBorderIcon fontSize="15px" className="like__comment" />
+      {/* <FavoriteBorderIcon fontSize="15px" className="like__comment" /> */}
     </div>
   );
 };

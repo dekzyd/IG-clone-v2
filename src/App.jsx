@@ -47,7 +47,7 @@ function App({ signOut, user }) {
 
   return (
     <>
-      <ToastContainer position="top-center" autoClose="2000"></ToastContainer>
+      <ToastContainer autoClose="1500"></ToastContainer>
       <RouterProvider router={router} />
     </>
   );
