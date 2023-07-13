@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { Auth, API, graphqlOperation } from "aws-amplify";
+import { Auth, API, Storage, graphqlOperation } from "aws-amplify";
 import { listUsers } from "../../graphql/queries";
 
 import "./Sidenav.css";
@@ -30,9 +30,10 @@ const Sidenav = ({ signOut }) => {
         );
         console.log(currentUser);
         setUser(currentUser[0]);
-        const userPix = await Storage.get(currentUser[0].avatar, {
+        const userProfilePix = await Storage.get(currentUser[0].avatar, {
           expires: 60,
         });
+        setUserPix(userProfilePix);
       } catch (error) {
         console.log(error);
       }
@@ -82,7 +83,7 @@ const Sidenav = ({ signOut }) => {
 
         <button className="sidenav__button">
           <div className="av_user">
-            <Avatar src="\images\image1.jpg">
+            <Avatar src={userPix}>
               {user.username ? user.username.charAt(0).toUpperCase() : "A"}
             </Avatar>
             <Link to={`/profile/${user.id}`} className="link">

@@ -1,12 +1,117 @@
-import { photos } from "../../data";
+import Skeleton from "react-loading-skeleton";
+import { useState, useEffect } from "react";
+import PhotoCard from "./PhotoCard";
 
-// const photos = [];
+import { listPosts, listUsers } from "../../graphql/queries";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
 const Photos = () => {
+  const [user, setUser] = useState({});
+  const [usersPosts, setUsersPosts] = useState([]);
+  const [view, setView] = useState("Post");
+  const queryParams = window.location.href.split("/");
+
+  useEffect(() => {
+    const getPosts = async () => {
+      const id = queryParams[queryParams.length - 1];
+      const PostsArray = await API.graphql(graphqlOperation(listPosts));
+      const usersPostArray = PostsArray.data.listPosts.items.filter((post) => {
+        return post.owner.id === id;
+      });
+      setUsersPosts(usersPostArray);
+
+      // get current user
+      const nowUser = await Auth.currentAuthenticatedUser();
+      const usersArray = await API.graphql(graphqlOperation(listUsers));
+      const currUser = usersArray.data.listUsers.items.filter((user) => {
+        return user.uniqueId === nowUser.attributes.sub;
+      });
+      setUser(currUser[0]);
+    };
+    getPosts();
+  }, []);
+
   return (
     <div className="h-16 border-t border-gray-primary mt-12 pt-4 px-10 ">
-      <div className="grid grid-cols-3 gap-8 mt-4 mb-12 pb-8">
-        {!photos
+      <div className="flex justify-center gap-x-3">
+        <button
+          className={view === "Post" ? "text-blue-500 font-semibold" : ""}
+          onClick={() => {
+            setView("Post");
+          }}
+        >
+          Posts
+        </button>
+        <button
+          className={view === "Saved" ? "text-blue-500 font-semibold" : ""}
+          onClick={() => {
+            setView("Saved");
+          }}
+        >
+          Saved
+        </button>
+        <button
+          className={view === "Tagged" ? "text-blue-500 font-semibold" : ""}
+          onClick={() => {
+            setView("Tagged");
+          }}
+        >
+          Tagged
+        </button>
+      </div>
+      <div>
+        {view === "Post" && (
+          <div>
+            <div className="flex justify-center ">
+              {usersPosts.length ? (
+                <div className="grid grid-cols-3 gap-8 mt-4 mb-12 pb-8">
+                  {usersPosts.map((post) => {
+                    return <PhotoCard key={post.id} data={post} />;
+                  })}
+                </div>
+              ) : (
+                <h1>No post yet</h1>
+              )}
+            </div>
+          </div>
+        )}
+        {view === "Saved" && (
+          <div className="saved-post">
+            <div className="saved">
+              {console.log(user)}
+              {!user.savedPost === null ? (
+                user.posts.map((savedPost) => {
+                  return (
+                    <div key={savedPost.id}>
+                      <PhotoCard data={savedPost} />
+                    </div>
+                  );
+                })
+              ) : (
+                <h1>No Saved Posts</h1>
+              )}
+            </div>
+          </div>
+        )}
+        {view === "Tagged" && (
+          <div className="tagged-post">
+            <div className="tagged">
+              {!user.taggedPost === null ? (
+                user.taggedPost.map((tagged) => {
+                  return (
+                    <div key={tagged.id}>
+                      <PhotoCard data={tagged} />
+                    </div>
+                  );
+                })
+              ) : (
+                <h1>No Tagged Posts</h1>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* {!photos
           ? new Array(12)
               .fill(0)
               .map((_, i) => <Skeleton key={i} width={320} height={400} />)
@@ -54,13 +159,13 @@ const Photos = () => {
                 </div>
               </div>
             ))
-          : null}
+          : null} */}
       </div>
 
-      {!photos ||
+      {/* {!photos ||
         (photos.length === 0 && (
           <p className="text-center text-2xl">No Posts Yet</p>
-        ))}
+        ))} */}
     </div>
   );
 };
