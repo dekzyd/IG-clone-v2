@@ -6,23 +6,28 @@ import { listUsers } from "../../../graphql/queries";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 
 const Suggestions = () => {
-  const [users, setUsers] = useState("");
+  const [suggestions, setSuggestions] = useState("");
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getSuggestions = async () => {
       try {
-        const usersList = await API.graphql(graphqlOperation(listUsers));
-        const list = usersList.data.listUsers.items;
-        setUsers(list);
+        const user = await Auth.currentAuthenticatedUser();
+        console.log(user);
+        const suggestionList = await API.graphql(graphqlOperation(listUsers));
+        const list = suggestionList.data.listUsers.items.filter((each_item) => {
+          return each_item.uniqueId !== user.attributes.sub;
+        });
+        console.log(list);
+        setSuggestions(list);
       } catch (error) {
         console.log(error);
       }
     };
 
-    getUsers();
+    getSuggestions();
   }, []);
 
-  if (!users) {
+  if (!suggestions) {
     return <div>Loading...</div>;
   }
 
@@ -30,7 +35,7 @@ const Suggestions = () => {
     <div className="suggestions">
       <div className="suggestions__title">Suggestions for you</div>
       <div className="suggestions__usernames">
-        {users.map((user, index) => {
+        {suggestions.map((user) => {
           return <SuggestionCard key={user.id} user={user} />;
         })}
       </div>

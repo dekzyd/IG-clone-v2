@@ -30,6 +30,12 @@ const Header = () => {
       });
       setUser(currUser[0]);
 
+      const PostsArray = await API.graphql(graphqlOperation(listPosts));
+      const usersPostArray = PostsArray.data.listPosts.items.filter((post) => {
+        return post.owner.id === id;
+      });
+      setUsersPosts(usersPostArray);
+
       const profileOwner = usersArray.data.listUsers.items.filter((user) => {
         return user.id === id;
       });
