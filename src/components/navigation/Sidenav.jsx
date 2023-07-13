@@ -59,8 +59,10 @@ const Sidenav = ({ signOut }) => {
           <span>Search</span>
         </button>
         <button className="sidenav__button">
-          <ExploreIcon />
-          <span>Explore</span>
+          <Link to="/explore">
+            <ExploreIcon />
+            <span>Explore</span>
+          </Link>
         </button>
         <button className="sidenav__button">
           <SlideshowIcon />
