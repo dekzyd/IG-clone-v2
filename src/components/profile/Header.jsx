@@ -8,15 +8,15 @@ import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 
 const Header = () => {
-  const queryParams = window.location.href.split("/");
-  const [usersPosts, setUsersPosts] = useState([]);
   const [profPageOwner, setProfPageOwner] = useState({});
+  const [usersPosts, setUsersPosts] = useState([]);
   const [user, setUser] = useState({});
   const [profFollowers, setProfFollowers] = useState("");
   const [profFollowings, setProfFollowings] = useState("");
   const [profPix, setProfPix] = useState("");
   const [holder, setHolder] = useState(false);
   const [followingProf, setFollowingProf] = useState("");
+  const queryParams = window.location.href.split("/");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,12 +24,6 @@ const Header = () => {
       // console.log(id);
 
       const nowUser = await Auth.currentAuthenticatedUser();
-      const PostsArray = await API.graphql(graphqlOperation(listPosts));
-      const usersPostArray = PostsArray.data.listPosts.items.filter((post) => {
-        return post.owner.id === id;
-      });
-      setUsersPosts(usersPostArray);
-
       const usersArray = await API.graphql(graphqlOperation(listUsers));
       const currUser = usersArray.data.listUsers.items.filter((user) => {
         return user.uniqueId === nowUser.attributes.sub;
