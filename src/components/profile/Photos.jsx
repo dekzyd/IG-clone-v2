@@ -1,12 +1,12 @@
 import Skeleton from "react-loading-skeleton";
 import { useState, useEffect } from "react";
+import PhotoCard from "./PhotoCard";
 
-import { listPosts } from "../../graphql/queries";
-import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
-
-const photos = [];
+import { listPosts, listUsers } from "../../graphql/queries";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
 const Photos = () => {
+  const [user, setUser] = useState({});
   const [usersPosts, setUsersPosts] = useState([]);
   const [view, setView] = useState("Post");
   const queryParams = window.location.href.split("/");
@@ -19,6 +19,14 @@ const Photos = () => {
         return post.owner.id === id;
       });
       setUsersPosts(usersPostArray);
+
+      // get current user
+      const nowUser = await Auth.currentAuthenticatedUser();
+      const usersArray = await API.graphql(graphqlOperation(listUsers));
+      const currUser = usersArray.data.listUsers.items.filter((user) => {
+        return user.uniqueId === nowUser.attributes.sub;
+      });
+      setUser(currUser[0]);
     };
     getPosts();
   }, []);
@@ -51,36 +59,36 @@ const Photos = () => {
           Tagged
         </button>
       </div>
-      <div className="grid grid-cols-3 gap-8 mt-4 mb-12 pb-8">
+      <div>
         {view === "Post" && (
-          <div className="my-post">
+          <div>
             <div className="posts">
               {usersPosts.length ? (
-                usersPosts.map((post) => {
-                  console.log(post);
-                  return (
-                    <div key={post.id}>
-                      <PhotoCard data={post} />
-                    </div>
-                  );
-                })
+                <div className="grid grid-cols-3 gap-8 mt-4 mb-12 pb-8">
+                  {usersPosts.map((post) => {
+                    return <PhotoCard key={post.id} data={post} />;
+                  })}
+                </div>
               ) : (
                 <h1>No post yet</h1>
               )}
             </div>
           </div>
         )}
-        {/* {view === "Saved" && (
+        {view === "Saved" && (
           <div className="saved-post">
             <div className="saved">
+              {console.log(user)}
               {!user.savedPost === null ? (
-                user.post.map((eachPost) => {
-                  return { */}
-        {/* <ProfileCard img={Post4} like = {eachPost.likes.length} comment ={eachPost.comment.length}/> */}
-        {/* };
+                user.posts.map((savedPost) => {
+                  return (
+                    <div key={savedPost.id}>
+                      <PhotoCard data={savedPost} />
+                    </div>
+                  );
                 })
               ) : (
-                <h1>No savedPost yet</h1>
+                <h1>No Saved Posts</h1>
               )}
             </div>
           </div>
@@ -89,17 +97,19 @@ const Photos = () => {
           <div className="tagged-post">
             <div className="tagged">
               {!user.taggedPost === null ? (
-                user.taggedPost.map((eachPost) => {
-                  return { */}
-        {/* <ProfileCard img={Post4} like = {eachPost.likes.length} comment = {eachPost.comment.length}/> */}
-        {/* };
+                user.taggedPost.map((tagged) => {
+                  return (
+                    <div key={tagged.id}>
+                      <PhotoCard data={tagged} />
+                    </div>
+                  );
                 })
               ) : (
-                <h1>No tagged Post</h1>
+                <h1>No Tagged Posts</h1>
               )}
             </div>
           </div>
-        )} */}
+        )}
 
         {/* {!photos
           ? new Array(12)

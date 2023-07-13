@@ -28,8 +28,8 @@ import {
 
 const Post = ({ postData, user }) => {
   const [postMakerPix, setPostMakerPix] = useState("");
-  const [postMaker, setPostMaker] = useState("");
-  const [liveUser, setLiveUser] = useState("");
+  const [postMaker, setPostMaker] = useState([]);
+  const [liveUser, setLiveUser] = useState([]);
 
   const [postPic, setPostPic] = useState("");
   const [postComments, setPostComments] = useState([]);
