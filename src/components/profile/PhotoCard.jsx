@@ -34,7 +34,11 @@ const PhotoCard = ({ data }) => {
 
   return (
     <div>
-      <img className="h-64 w-96" src={image} alt={data.title} />
+      <img
+        className="h-64 w-96 object-cover rounded-sm"
+        src={image}
+        alt={data.title}
+      />
     </div>
   );
 };

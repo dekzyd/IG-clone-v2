@@ -62,7 +62,7 @@ const Photos = () => {
       <div>
         {view === "Post" && (
           <div>
-            <div className="posts">
+            <div className="flex justify-center ">
               {usersPosts.length ? (
                 <div className="grid grid-cols-3 gap-8 mt-4 mb-12 pb-8">
                   {usersPosts.map((post) => {

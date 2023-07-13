@@ -5,6 +5,7 @@ import Homepage from "./pages/Homepage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import CreatePost from "./pages/CreatePost";
+import ExplorePage from "./pages/ExplorePage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import { ToastContainer } from "react-toastify";
@@ -35,6 +36,10 @@ function App({ signOut, user }) {
         {
           path: "add_post",
           element: <CreatePost />,
+        },
+        {
+          path: "explore",
+          element: <ExplorePage />,
         },
       ],
     },
