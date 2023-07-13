@@ -13,12 +13,17 @@ const Suggestions = () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
         console.log(user);
-        const suggestionList = await API.graphql(graphqlOperation(listUsers));
-        const list = suggestionList.data.listUsers.items.filter((each_item) => {
-          return each_item.uniqueId !== user.attributes.sub;
-        });
-        console.log(list);
-        setSuggestions(list);
+
+        const getUsers = await API.graphql(graphqlOperation(listUsers));
+
+        const SuggestionList = getUsers.data.listUsers.items.filter(
+          (each_item) => {
+            return each_item.uniqueId !== user.attributes.sub;
+          }
+        );
+
+        console.log(SuggestionList);
+        setSuggestions(SuggestionList);
       } catch (error) {
         console.log(error);
       }

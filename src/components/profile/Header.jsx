@@ -87,6 +87,11 @@ const Header = () => {
           },
         })
       );
+
+      // update followed users profile
+
+      // update followers profile
+
       toast.success(`Now following ${profPageOwner.username}`);
       setFollowingProf(true);
     } catch (error) {
