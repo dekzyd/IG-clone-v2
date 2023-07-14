@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Avatar } from "@mui/material";
-import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -27,7 +27,7 @@ const SuggestionCard = ({ user }) => {
           </span>
           <div className="username__info">
             <span className="username">{username}</span>
-            <span className="relation">New to Instagram</span>
+            {/* <span className="relation">New to Instagram</span> */}
           </div>
         </div>
       </Link>

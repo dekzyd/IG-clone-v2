@@ -2,10 +2,13 @@
 import { Auth, API, Storage, graphqlOperation } from "aws-amplify";
 import { listUsers } from "../../graphql/queries";
 
+import SuggestionCard from "../timeline/suggestions/SuggestionCard";
+
 import "./Sidenav.css";
 import { Link } from "react-router-dom";
 
 import HomeIcon from "@mui/icons-material/Home";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import SearchIcon from "@mui/icons-material/Search";
 import ExploreIcon from "@mui/icons-material/Explore";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
@@ -13,12 +16,17 @@ import ChatIcon from "@mui/icons-material/Chat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MenuIcon from "@mui/icons-material/Menu";
+import ClearRounded from "@mui/icons-material/ClearRounded";
 import { Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const Sidenav = ({ signOut }) => {
   const [user, setUser] = useState("");
   const [userPix, setUserPix] = useState("");
+  const [searchContainer, setSearchContainer] = useState(false);
+  const [Results, setResults] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,6 +50,23 @@ const Sidenav = ({ signOut }) => {
     fetchUser();
   }, []);
 
+  const searchUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const users = await API.graphql(graphqlOperation(listUsers));
+      const searchedUsersArray = users.data.listUsers.items.filter(
+        (each_user) => {
+          return each_user.username.toUpperCase() === searchValue.toUpperCase();
+        }
+      );
+      setResults(searchedUsersArray);
+    } catch (error) {
+      toast.error("Error searching for user");
+    }
+    setSearchValue("");
+  };
+
   return (
     <div className="sidenav">
       <img
@@ -54,10 +79,59 @@ const Sidenav = ({ signOut }) => {
           <HomeIcon />
           <span>Home</span>
         </button>
-        <button className="sidenav__button">
+        <button
+          className="sidenav__button"
+          onClick={() => {
+            setSearchContainer(!searchContainer);
+          }}
+        >
           <SearchIcon />
           <span>Search</span>
         </button>
+        {searchContainer && (
+          <div className="border-2 text-center relative ml-3 pb-2">
+            <div className="">
+              <h3 className="my-2">Search</h3>
+              <form onSubmit={searchUser}>
+                <input
+                  className="outline-indigo-500 border-2 pl-2 mb-2"
+                  type="text"
+                  placeholder="search user"
+                  value={searchValue}
+                  onChange={(e) => {
+                    setSearchValue(e.target.value);
+                  }}
+                />
+                <button type="submit">
+                  <PersonSearchIcon />
+                </button>
+              </form>
+              <ClearRounded
+                className="absolute right-2 top-2 cursor-pointer "
+                onClick={() => {
+                  setSearchContainer(!searchContainer);
+                  setSearchValue("");
+                  setResults([]);
+                }}
+              />
+            </div>
+            <div>
+              <span className="">Search Results</span>
+              <div className="ml-3">
+                {Results.length &&
+                  Results.map((each_result) => {
+                    return (
+                      <SuggestionCard
+                        key={each_result.id}
+                        user={each_result}
+                        className="mb-1"
+                      />
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        )}
         <button className="sidenav__button">
           <Link to="/explore">
             <ExploreIcon />
