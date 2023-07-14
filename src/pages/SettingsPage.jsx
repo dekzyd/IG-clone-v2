@@ -1,4 +1,4 @@
-import "./settingsPage.css";
+import "./SettingsPage.css";
 
 import { Link, useNavigate } from "react-router-dom";
 
