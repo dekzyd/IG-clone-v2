@@ -12,7 +12,6 @@ const Suggestions = () => {
     const getSuggestions = async () => {
       try {
         const user = await Auth.currentAuthenticatedUser();
-        console.log(user);
 
         const getUsers = await API.graphql(graphqlOperation(listUsers));
 
@@ -22,7 +21,6 @@ const Suggestions = () => {
           }
         );
 
-        console.log(SuggestionList);
         setSuggestions(SuggestionList);
       } catch (error) {
         console.log(error);

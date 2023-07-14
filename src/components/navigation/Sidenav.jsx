@@ -35,7 +35,7 @@ const Sidenav = ({ signOut }) => {
         const currentUser = usersList.data.listUsers.items.filter(
           (item) => item.uniqueId === userDetails.attributes.sub
         );
-        console.log(currentUser);
+
         setUser(currentUser[0]);
         const userProfilePix = await Storage.get(currentUser[0].avatar, {
           expires: 60,
