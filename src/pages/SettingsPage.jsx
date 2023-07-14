@@ -29,7 +29,7 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const userDetails = await Auth.currentAuthenticatedUser();
-      console.log(userDetails);
+
       const usersList = await API.graphql(graphqlOperation(listUsers));
       const currentUser = usersList.data.listUsers.items.filter(
         (item) => item.uniqueId === userDetails.attributes.sub
@@ -60,7 +60,6 @@ const SettingsPage = () => {
       const { key } = await Storage.put(`${Date.now()}.${file_ext}`, image, {
         contentType: `image/${file_ext}`,
       });
-      console.log("image uploaded to s3 bucket");
       setUser({ ...user, avatar: key });
       setUserAvatar(URL.createObjectURL(image));
     } catch (error) {
