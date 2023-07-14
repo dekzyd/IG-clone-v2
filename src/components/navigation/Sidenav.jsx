@@ -8,7 +8,6 @@ import "./Sidenav.css";
 import { Link } from "react-router-dom";
 
 import HomeIcon from "@mui/icons-material/Home";
-import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import SearchIcon from "@mui/icons-material/Search";
 import ExploreIcon from "@mui/icons-material/Explore";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
@@ -91,10 +90,10 @@ const Sidenav = ({ signOut }) => {
         {searchContainer && (
           <div className="border-2 text-center relative ml-3 pb-2">
             <div className="">
-              <h3 className="my-2">Search</h3>
+              <h3 className="my-4">Search</h3>
               <form onSubmit={searchUser}>
                 <input
-                  className="outline-indigo-500 border-2 pl-2 mb-2"
+                  className="outline-indigo-500 border-2 pl-2 mb-4"
                   type="text"
                   placeholder="search user"
                   value={searchValue}
@@ -102,12 +101,15 @@ const Sidenav = ({ signOut }) => {
                     setSearchValue(e.target.value);
                   }}
                 />
-                <button type="submit">
-                  <PersonSearchIcon />
+                <button
+                  type="submit"
+                  className="ml-2 text-gray-400 hover:text-indigo-500"
+                >
+                  <SearchIcon />
                 </button>
               </form>
               <ClearRounded
-                className="absolute right-2 top-2 cursor-pointer "
+                className="absolute right-2 top-2 cursor-pointer hover:text-red-500"
                 onClick={() => {
                   setSearchContainer(!searchContainer);
                   setSearchValue("");
@@ -172,12 +174,12 @@ const Sidenav = ({ signOut }) => {
         </button>
       </div>
 
-      <div className="sidenav__more">
+      {/* <div className="sidenav__more">
         <button className="sidenav__button">
           <MenuIcon />
           <span>More</span>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
